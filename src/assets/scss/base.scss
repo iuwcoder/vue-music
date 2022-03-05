@@ -1,0 +1,52 @@
+@import "./reset.scss";
+
+body,
+html {
+  line-height: 1;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  background: $color-bgc;
+  color: $color-text;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.g-relative {
+  position: relative;
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.3s
+}
+
+.slide-enter-from, .slide-leave-to {
+  transform: translate3d(100%, 0, 0)
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all 0.3s;
+}
+
+.list-enter-from, .list-leave-to {
+  height: 0 !important;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0)
+  }
+
+  100% {
+    transform: rotate(360deg)
+  }
+}
