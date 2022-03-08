@@ -18,6 +18,7 @@
         <discover-singer></discover-singer>
       </div>
     </scroll>
+    <main-bottom-bar class="main-botttom-bar"></main-bottom-bar>
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import DiscoverSong from "./childrenComps/DiscoverSong.vue";
 import DiscoverMv from "./childrenComps/DiscoverMv.vue";
 import DiscoverAlbum from "./childrenComps/DiscoverAlbum.vue";
 import DiscoverSinger from "./childrenComps/DiscoverSinger.vue";
+import MainBottomBar from "@/components/context/mainBottomBar/MainBottomBar.vue";
 
 import scroll from "components/common/scroll/scroll.vue";
 
@@ -45,6 +47,7 @@ export default {
     DiscoverAlbum,
     DiscoverSinger,
     scroll,
+    MainBottomBar,
   },
   data() {
     return {};

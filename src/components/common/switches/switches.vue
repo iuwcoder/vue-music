@@ -60,7 +60,7 @@ export default {
     flex: 1;
     height: 30px;
     line-height: 30px;
-    font-size: 18px;
+    // font-size: 17px;
     color: $color-text;
     &.active {
       color: $color-red;

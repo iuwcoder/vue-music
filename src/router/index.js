@@ -14,6 +14,8 @@ const moreSinger = () => import('@/views/discover/childrenComps/moreComps/moreSi
 
 //歌单页面
 const SheetInfo = () => import('@/components/context/sheetInfo/SheetInfo' /* webpackChunkName: "sheet-info" */) // 歌单详情页面
+const Comment = () => import('@/components/context/comment/comment' /* webpackChunkName: "comment" */) //评论
+
 // 歌曲播放
 const PlaySong = () => import('@/components/context/playSong/PlaySong' /* webpackChunkName: "play-song" */) // 播放界面
 
@@ -45,59 +47,46 @@ const routes = [{
     path: '/discover',
     component: discover,
     meta: {
-      TabbarShow: true
+      TabbarShow: true,
+      BottomShow: true
     }
   },
   { //每日推荐
     path: '/discover/recommendSong',
     component: recommendSong,
-    meta: {
-      TabbarShow: false
-    }
   },
 
   { // 歌单广场
-    path: '/discover/moreSheet/',
+    path: '/discover/moreSheet',
     component: moreSheet,
-    meta: {
-      TabbarShow: false
-    }
   },
   { // 更多最新音乐
-    path: '/discover/moreSongs/',
+    path: '/discover/moreSongs',
     component: moreSongs,
-    meta: {
-      TabbarShow: false
-    }
   },
   { // 更多专辑
-    path: '/discover/moreAlbum/',
+    path: '/discover/moreAlbum',
     component: moreAlbum,
-    meta: {
-      TabbarShow: false
-    }
   },
 
   { // 歌单/专辑内容
     path: '/SheetInfo/:id',
     component: SheetInfo,
+  },
+  { // 评论
+    path: '/Comment/:id&:isType', 
+    component: Comment,
     meta: {
-      TabbarShow: false
+      // BottomShow: false
     }
   },
-  { // 歌单/专辑 评论
-    // path: '/playComment/:id&:isAlbum', component: SheetInfoComment
-  },
-  { // 播放界面
-    path: '/PlaySong/:sid',
-    component: PlaySong
-  },
+  // { // 播放界面
+  //   path: '/PlaySong/:sid',
+  //   component: PlaySong
+  // },
   { //更多歌手
-    path: '/discover/moreSinger/',
+    path: '/discover/moreSinger',
     component: moreSinger,
-    meta: {
-      TabbarShow: false
-    }
   },
 
   { // 歌手详情页
@@ -109,46 +98,31 @@ const routes = [{
     path: '/userCenter',
     component: userCenter,
     meta: {
-      TabbarShow: true
+      TabbarShow: true,
+      BottomShow: true
     },
   },
   { // 登录
     path: '/userCenter/login',
     component: Login,
-    meta: {
-      TabbarShow: false
-    }
   },
   { // 手机号登录
     path: '/userCenter/login/phoneLogin',
     component: PhoneLogin,
-    meta: {
-      TabbarShow: false
-    }
   },
   { // 最近播放
     path: '/userCenter/played/:id',
     component: played,
-    meta: {
-      TabbarShow: false
-    }
   },
   { // 收藏
     path: '/userCenter/myCollection',
     component: myCollection,
-    meta: {
-      TabbarShow: false
-    }
   },
-
 
 
   {
     path: '/video',
     component: video,
-    meta: {
-      TabbarShow: true
-    }
   },
   {
     path: '/search',
@@ -162,5 +136,19 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+// router.beforeEach((to, from, next) => {
+//   if (to.path === '/userCenter/login') {
+//     next();
+//   } else {
+//     let token = localStorage.getItem('token');
+
+//     if (token === null || token === '') {
+//       next('/userCenter/login');
+//     } else {
+//       next();
+//     }
+//   }
+// });
 
 export default router

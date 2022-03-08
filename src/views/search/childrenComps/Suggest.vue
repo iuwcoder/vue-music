@@ -9,7 +9,6 @@
 
 <script>
 import SongItem from "@/components/context/songItem/SongItem";
-import TabNav from "@/components/context/tabNav/TabNav";
 import { searchResult } from "network/search";
 import { getSongDetial, getlyric } from "network/played"; // 获取歌曲基本信息 歌词 评论
 import { playSong } from "network/songs"; // 获取音乐url
@@ -23,7 +22,6 @@ export default {
   name: "Suggest",
   components: {
     SongItem,
-    TabNav,
   },
   props: {
     query: String,

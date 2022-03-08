@@ -101,17 +101,6 @@ export function getSheetDetial(id) {
   })
 }
 
-// 获取歌单评论
-export function getSheetComment(id, limit = 25, offset) {
-  return request({
-    url: '/comment/playlist',
-    params: {
-      id,
-      limit,
-      offset
-    }
-  })
-}
 
 // 每日推荐歌曲
 export function getRecommendSong(cookie) {

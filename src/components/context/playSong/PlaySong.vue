@@ -84,7 +84,7 @@
               <div class="navitem">
                 <i class="iconfont icon-changge"></i>
               </div>
-              <div class="navitem">
+              <div class="navitem" @click="toComment">
                 <i class="iconfont icon-pinglun"></i>
               </div>
               <div class="navitem">
@@ -148,6 +148,7 @@ import scroll from "components/common/scroll/scroll";
 import { formatTime } from "@/assets/js/util.js";
 import { PLAY_MODE } from "@/assets/js/constant";
 import { useStore} from "vuex";
+import { useRouter } from "vue-router";
 import { computed, watch, ref, nextTick } from "vue";
 import useMode from "./use-mode"; //播放模式
 import useFavorite from "./use-favorite"; //喜欢
@@ -172,6 +173,8 @@ export default {
     const duration = ref(0); //歌曲时长
     const currentTime = ref(0); //当前播放时间
     let progressChanging = false;
+
+    const router = useRouter();
 
     //vuex
     const store = useStore();
@@ -367,6 +370,12 @@ export default {
       }
     }
 
+    // 评论
+    function toComment() {
+      router.push('/Comment/' + currentSong.value.id  + "&" + "0")
+      
+    }
+
     return {
       // data
       audioRef,
@@ -403,7 +412,7 @@ export default {
       onProgressChanging,
       onProgressChanged,
       end,
-
+      toComment,
       // mode
       modeIcon,
       changeMode,

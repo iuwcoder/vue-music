@@ -50,7 +50,7 @@
 <script>
 import SearchInput from "@/views/search/childrenComps/SearchInput.vue";
 import Suggest from "@/views/search/childrenComps/Suggest.vue";
-import Switches from "./switches.vue";
+import Switches from "@/components/common/switches/switches.vue";
 import SongItem from "@/components/context/songItem/SongItem";
 import Message from "@/components/common/message/message.vue";
 import scroll from "components/common/scroll/scroll.vue";
@@ -112,6 +112,7 @@ export default {
     // 展示添加成功消息弹窗
     function showMessage() {
       messageRef.value.show();
+      saveSearch()
     }
 
     return {

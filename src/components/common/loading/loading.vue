@@ -2,7 +2,7 @@
   <div class="loading">
     <div class="loading-content">
       <img width="24" height="24" src="./loading.gif">
-      <p class="desc">{{title}}</p>
+      <!-- <p class="desc">{{title}}</p> -->
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@
       .desc {
         line-height: 20px;
         font-size: 12px;
-        color: rgba(255, 255, 255, 0.5);;
+        color: $color-text;
       }
     }
   }

@@ -9,7 +9,7 @@
     </div>
     <span>|</span>
     <div class="item">
-      <div class="iconfont">
+      <div class="iconfont" @click="toComment">
         <i class="iconfont icon-pinglun"></i>
       </div>
       <div class="text">{{ sheetNav.commentCount }}</div>
@@ -33,6 +33,12 @@ export default {
       default: [],
     },
   },
+  methods: {
+    // 评论
+    toComment() {
+      this.$router.push('/Comment/' + this.$route.params.id + "&" + '2')
+    }
+  }
 };
 </script>
 

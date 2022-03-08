@@ -1,20 +1,22 @@
 <template>
   <div class="collect">
-    <menu-nav :navTitle="'最近播放'"></menu-nav>
-    <div v-no-result:[noResultText]="noResult">
-      <song-nav
-        v-if="this.favoriteList.length"
-        class="song-nav"
-        :trackCount="favoriteList.length"
-        @click="select"
-      ></song-nav>
-      <song-item :songList="favoriteList" @select="selectSong"></song-item>
-    </div>
+    <menu-nav :navTitle="'我的收藏'"></menu-nav>
+    <scroll class="scroll-content">
+      <div v-no-result:[noResultText]="noResult">
+        <song-nav
+          v-if="favoriteList.length"
+          class="song-nav"
+          :trackCount="favoriteList.length"
+          @click="selectAll"
+        ></song-nav>
+        <song-item :songList="favoriteList" @select="selectSong"></song-item>
+      </div>
+    </scroll>
   </div>
 </template>
 
 <script>
-import MenuNav from "@/components/context/menuNav/MenuNav.vue";
+import MenuNav from "@/components/common/menuNav/MenuNav.vue";
 import SongNav from "@/components/context/songItem/SongNav";
 import SongItem from "@/components/context/songItem/SongItem";
 import scroll from "components/common/scroll/scroll.vue";
@@ -48,9 +50,9 @@ export default {
     selectSong({ song }) {
       this.addSong(song);
     },
-    select() {
-      this.selectPlay(this.favoriteList)
-    }
+    selectAll({ item, index }) {
+      this.selectPlay({ list: this.favoriteList, index });
+    },
   },
 };
 </script>
@@ -63,5 +65,9 @@ export default {
   left: 0;
   right: 0;
   background-color: $color-bgc1;
+  .scroll-content {
+    height: 100%;
+    overflow: hidden;
+  }
 }
 </style>

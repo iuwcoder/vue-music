@@ -8,7 +8,7 @@
         <div class="center">
           <div>
             <div class="listName">我喜欢的音乐</div>
-            <div class="count">{{ trackCount }}首</div>
+            <div class="count">{{ this.$store.state.userId !== "" ? trackCount : 0 }}首</div>
           </div>
         </div>
         <div class="right">
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { getUserPlayList } from "network/user"; // 用户信息
+import {  getUserPlayList } from "network/user"; // 用户信息
 
 export default {
   name: "UserLike",
@@ -44,7 +44,7 @@ export default {
     getUserPlayList(this.$store.state.userId).then((res) => {
       this.likeId = res.data.playlist[0].id;
       this.trackCount = res.data.playlist[0].trackCount;
-      console.log(this.likeId);
+      console.log(this.likeId );
     });
   },
 };

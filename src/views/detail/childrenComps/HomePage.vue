@@ -39,6 +39,7 @@
         :showDivColor="'#ee5757'"
         :songCount="'累计听歌' + profile.listenSongs + '首'"
         :iconColor="'#fff'"
+        @click="playedList"
       ></item-list>
       <item-list
         v-if="showSheet"
@@ -49,6 +50,7 @@
         :songCount="likeSheet.trackCount + '首，'"
         :playCount="'播放' + likeSheet.playCount + '次'"
         :iconColor="'#ff4b41'"
+        @click="userLike"
       ></item-list>
     </div>
     <div class="creat-sheet" v-if="createSheet.length !== 0">
@@ -65,6 +67,7 @@
         :sheetImg="item.coverImgUrl"
         :songCount="item.trackCount + '首，'"
         :playCount="'播放' + item.playCount + '次'"
+        @click.stop="userSheet(item.id)"
       ></item-list>
     </div>
     <div class="sub-sheet" v-if="subSheet.length !== 0">
@@ -79,6 +82,7 @@
         :sheetImg="item.coverImgUrl"
         :songCount="item.trackCount + '首，by ' + item.nickname"
         :playCount="'，播放' + item.playCount + '次'"
+        @click="sheet(item.id)"
       ></item-list>
     </div>
   </div>
@@ -112,6 +116,25 @@ export default {
       loading: true,
     };
   },
+  methods: {
+    // 用户最近播放
+    playedList() {
+      this.$router.push("/userCenter/played/" + this.$route.params.uid);
+    },
+    // 用户喜欢的音乐
+    userLike() {
+      this.$router.push("/SheetInfo/" + this.likeSheet.id + "&" + false);
+    },
+    // 用户创建的歌单
+    userSheet(id) {
+      this.$router.push("/SheetInfo/" + id);
+    },
+
+    // 用户收藏的歌单
+    sheet(id) {
+      this.$router.push("/SheetInfo/" + id);
+    },
+  },
   created() {
     this.uid = this.$route.params.uid;
     // 获取歌单
@@ -121,11 +144,6 @@ export default {
         this.likeSheet.name = res.data.playlist[0].name; // 歌单名称
         this.likeSheet.playCount = toStringNum(res.data.playlist[0].playCount); // 歌单播放次数
         this.likeSheet.trackCount = res.data.playlist[0].trackCount; // 歌单歌曲数量
-        // this.$set(
-        //   this.likeSheet,
-        //   this.likeSheet.name,
-        //   res.data.playlist[0].name
-        // );
 
         for (let i = 1; i < res.data.playlist.length; i++) {
           if (res.data.playlist[i].creator.userId == this.uid) {

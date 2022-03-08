@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import MenuNav from "components/context/menuNav/MenuNav";
+import MenuNav from "components/common/menuNav/MenuNav";
 import SongItem from "@/components/context/songItem/SongItem";
 import { getRecommendSong } from "network/discover";
 

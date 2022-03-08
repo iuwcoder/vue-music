@@ -1,5 +1,5 @@
 <template>
-  <div class="SongItem">
+  <div class="SongItem" v-loading="!songList.length">
     <!-- <scroll class="song-content"> -->
       <div>
         <div
@@ -72,7 +72,7 @@ export default {
     },
   },
   emits: ["select", "select-song"],
-  methods: {
+  methods: { 
     selectItem(song, index) {
       this.$emit("select", { song, index });
     },

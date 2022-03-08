@@ -21,15 +21,3 @@ export function getAlbumDetail(id) {
     }
   })
 }
-
-// 专辑评论
-export function getAlbumComment(id, limit, offset) {
-  return request({
-    url: '/comment/album',
-    params: {
-      id,
-      limit,
-      offset
-    }
-  })
-}

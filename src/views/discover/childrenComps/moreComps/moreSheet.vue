@@ -2,7 +2,7 @@
   <div class="more-sheet">
     <menu-nav class="menu-nav" :navTitle="'歌单广场'"></menu-nav>
     <van-tabs
-      @click="tabToggle"
+      @click-tab="tabToggle"
       class="tab"
       background="#f5f5f5"
       title-active-color="#e93d34"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import MenuNav from "@/components/context/menuNav/MenuNav.vue";
+import MenuNav from "@/components/common/menuNav/MenuNav.vue";
 import SheetItem from "components/context/sheetItem/SheetItem";
 import scroll from "components/common/scroll/scroll.vue";
 
@@ -73,7 +73,7 @@ export default {
         this.sheetDetail = []; // 清空数据
         this.getSheet(index);
       }
-      this.index = index;
+      this.index = index;``
     },
 
     // 获取歌单

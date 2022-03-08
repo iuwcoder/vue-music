@@ -2,7 +2,7 @@
   <div class="user-sheet">
     <div class="box">
       <div class="top">
-        <div class="left">创建歌单 ({{ sheetLength }}个)</div>
+        <div class="left">创建歌单 ({{ this.$store.state.userId !== "" ? sheetLength : 0 }}个)</div>
         <div class="center">
           <i class="iconfont icon-add"></i>
         </div>
@@ -62,9 +62,10 @@ export default {
   created() {
     getUserDetail(this.$store.state.userId).then((res) => {
       this.nickName = res.data.profile.nickname; // 用户名
+      console.log(res);
     });
     getUserPlayList(this.$store.state.userId).then((res) => {
-      console.log(res);
+      // console.log(res);
       for (const item of res.data.playlist) {
         this.playList.push({
           name: item.name, //歌单名称

@@ -79,6 +79,8 @@ export default {
             });
           });
         }
+        // console.log(this.songs);
+        
         // this.song.map((item2, index2) => {
         //   console.log(item2);
         //   this.songs.map((item1) => {
@@ -88,7 +90,7 @@ export default {
         //   });
         //   return this.songs;
         // });
-        console.log(this.songs);
+        
         // console.log(this.song);
         // let songsList = this.songs.map((item, index) => {
         //   return { ...item, ...this.song[index] };

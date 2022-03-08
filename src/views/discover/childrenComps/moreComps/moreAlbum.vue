@@ -7,7 +7,7 @@
       title-active-color="#e93d34"
       animated
       swipeable
-      @click="tabToggle"
+      @click-tab="tabToggle"
     >
       <van-tab
         v-for="(item, index) in tagList"
@@ -17,26 +17,29 @@
       >
       </van-tab>
     </van-tabs>
-    <div class="content" v-loading="!albumList.length">
-      <div
-        class="album-item"
-        @click="albumShow(item.id)"
-        v-for="(item, index) in albumList"
-        :key="index"
-      >
-        <div class="top-img">
-          <img v-lazy="item.picUrl" alt="" />
-          <div class="zhe"></div>
+    <scroll class="scroll-content">
+      <div class="content" v-loading="!albumList.length">
+        <div
+          class="album-item"
+          @click="albumShow(item.id)"
+          v-for="(item, index) in albumList"
+          :key="index"
+        >
+          <div class="top-img">
+            <img v-lazy="item.picUrl" alt="" />
+            <div class="zhe"></div>
+          </div>
+          <div class="album-name">{{ item.name }}</div>
+          <div class="artist">{{ item.artist }}</div>
         </div>
-        <div class="album-name">{{ item.name }}</div>
-        <div class="artist">{{ item.artist }}</div>
       </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script>
-import MenuNav from "components/context/menuNav/MenuNav";
+import MenuNav from "components/common/menuNav/MenuNav";
+import Scroll from "components/common/scroll/scroll.vue";
 
 import { getNewAlbum } from "network/discover";
 
@@ -44,6 +47,7 @@ export default {
   name: "moreAlbum",
   components: {
     MenuNav,
+    Scroll,
   },
   data() {
     return {
@@ -130,6 +134,11 @@ export default {
 <style lang="scss" scoped>
 .more-album {
   width: 100%;
+  height: 100vh;
+  .scroll-content {
+    height: 100%;
+    overflow: hidden;
+  }
   .nav {
     border: none;
     // position: fixed;
@@ -175,7 +184,6 @@ export default {
           top: 0;
           left: 20px;
           z-index: 1;
-          
         }
       }
       .album-name {

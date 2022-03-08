@@ -110,6 +110,7 @@ export default {
   align-items: center;
   position: fixed;
   left: 0;
+  // bottom: 50px;
   bottom: 0;
   z-index: 180;
   width: 100%;

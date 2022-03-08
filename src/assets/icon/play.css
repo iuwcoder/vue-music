@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2674198 */
-  src: url('//at.alicdn.com/t/font_2674198_d8d9bq1y13d.woff2?t=1646291362069') format('woff2'),
-       url('//at.alicdn.com/t/font_2674198_d8d9bq1y13d.woff?t=1646291362069') format('woff'),
-       url('//at.alicdn.com/t/font_2674198_d8d9bq1y13d.ttf?t=1646291362069') format('truetype');
+  src: url('//at.alicdn.com/t/font_2674198_1wg2it4noy2.woff2?t=1646645539442') format('woff2'),
+       url('//at.alicdn.com/t/font_2674198_1wg2it4noy2.woff?t=1646645539442') format('woff'),
+       url('//at.alicdn.com/t/font_2674198_1wg2it4noy2.ttf?t=1646645539442') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,34 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-faxian1:before {
+  content: "\e8af";
+}
+
+.icon-boke:before {
+  content: "\e613";
+}
+
+.icon-yinle:before {
+  content: "\e612";
+}
+
+.icon-shequ:before {
+  content: "\e8b8";
+}
+
+.icon-wodeguanzhu:before {
+  content: "\e8bc";
+}
+
+.icon-xitongfanhui1:before {
+  content: "\e6b6";
+}
+
+.icon-yuyin:before {
+  content: "\e6e1";
 }
 
 .icon-xitongfanhui:before {

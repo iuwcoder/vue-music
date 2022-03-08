@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import MenuNav from "@/components/context/menuNav/MenuNav.vue";
+import MenuNav from "@/components/common/menuNav/MenuNav.vue";
 
 import { phoneLogin} from "network/login"; // 网络请求
 
@@ -55,17 +55,21 @@ export default {
           .then((res) => {
             console.log(res);
             if (res.data["code"] === 200) {
+              this.$toast('登录成功', 1900);
+              this.$router.push("/discover");
               this.userToken = res.data.token;
               this.changeLogin(this.userToken);
               this.userId = res.data.profile.userId;
               this.setUserId(this.userId);
-              this.$router.push("/discover");
-              console.log("成功");
+            } else {
+              this.$toast("密码错误！", 1900);
             }
           })
           .catch((err) => {
-            console.log("错误");
+            this.$toast("网络出错！", 1900);
           });
+      } else {
+        this.$toast("手机号不规范", 1900);
       }
     },
   },

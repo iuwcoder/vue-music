@@ -57,14 +57,30 @@
           <div v-else class="singerDetail">{{ profile.artistName }}</div>
         </div>
         <div class="nav-box" ref="tab">
-          <tab-nav
+          <van-tabs
+            class="tab"
+            background="#fff"
+            title-active-color="#e93d34"
+            animated
+            swipeable
+            @click-tab="tabToggle"
+          >
+            <van-tab
+              v-for="(item, index) in itemList"
+              :title="item"
+              :key="index"
+            >
+            </van-tab>
+          </van-tabs>
+          <!-- <tab-nav
             @tabToggle="tabToggle"
             :firstIndex="firstIndex"
             class="tabnav"
             :itemList="itemList"
             ref="inforTabnav"
-          ></tab-nav>
+          ></tab-nav> -->
         </div>
+
         <!-- 主页 -->
         <home-page
           :artistId="profile.artistId"
@@ -93,7 +109,7 @@
 </template>
 
 <script>
-import MenuNav from "@/components/context/menuNav/MenuNav.vue";
+import MenuNav from "@/components/common/menuNav/MenuNav.vue";
 import TabNav from "@/components/context/tabNav/TabNav";
 import HomePage from "./childrenComps/HomePage.vue";
 import SongList from "@/components/context/songItem/SongList";
@@ -125,28 +141,26 @@ export default {
       itemList: ["主页"],
       pageY: 0,
       showHome: true, // 显示/隐藏主页
-      showDynamic: false, // 显示/隐藏动态
       showSongs: false, // 显示/隐藏歌曲
       showAlbum: false, // 显示/隐藏专辑
       showMv: false, // 显示/隐藏mv
       navToTop: 0, // 导航栏距离顶部的距离
-      firstIndex: 0, // 导航栏索引
       showShare: false, // 分享面板
       special: true,
       scrollY: 0, //滚动位置
       tabOffsetTop: 0, //最大滚动位置
       isTabFixed: false,
+      active: 0
     };
   },
   // 监听路由变化
   beforeRouteUpdate(to, from, next) {
     if (to.fullPath != from.fullPath) {
       this.profile = {}; // 清空mv数据
-      this.firstIndex = 0; // 重置导航栏索引
-      this.$refs.inforTabnav.tabItem(this.firstIndex);
-      this.tabToggle(this.firstIndex); // 切换导航栏界面
+      this.index = 0; // 重置导航栏索引
+      // this.$refs.inforTabnav.tabItem(this.firstIndex);
+      this.tabToggle(this.index); // 切换导航栏界面
       this.showHome = false; // 显示首页
-      // this.$store.state.isShowNav = true;
       next();
       this.userDetail();
     }
@@ -227,35 +241,33 @@ export default {
 
     // 导航栏切换
     tabToggle(index) {
-      if (this.itemList.length == 4) {
-        switch (index) {
-          case 0:
-            this.showHome = true;
-            this.showSongs = false;
-            this.showAlbum = false;
-            this.showMv = false;
-            break;
-          case 1:
-            this.showSongs = true;
-            this.showHome = false;
-            this.showAlbum = false;
-            this.showMv = false;
-            break;
-          case 2:
-            this.showAlbum = true;
-            this.showSongs = false;
-            this.showHome = false;
-            this.showMv = false;
-            break;
-          case 3:
-            this.showMv = true;
-            this.showAlbum = false;
-            this.showSongs = false;
-            this.showHome = false;
-            break;
-          default:
-            break;
-        }
+      switch (index) {
+        case 0:
+          this.showHome = true;
+          this.showSongs = false;
+          this.showAlbum = false;
+          this.showMv = false;
+          break;
+        case 1:
+          this.showSongs = true;
+          this.showHome = false;
+          this.showAlbum = false;
+          this.showMv = false;
+          break;
+        case 2:
+          this.showAlbum = true;
+          this.showSongs = false;
+          this.showHome = false;
+          this.showMv = false;
+          break;
+        case 3:
+          this.showMv = true;
+          this.showAlbum = false;
+          this.showSongs = false;
+          this.showHome = false;
+          break;
+        default:
+          break;
       }
     },
 
@@ -285,18 +297,12 @@ export default {
 
           // 判断用户是不是歌手
           if (this.profile.artistId !== null) {
-            this.itemList.splice(1, 0, "歌曲", "专辑", "MV");
-            this.$nextTick(() => {
-              this.$refs.inforTabnav.tabItem(0);
-            });
+            this.itemList.splice(1, 0, "歌曲", "专辑", "视频");
           }
         },
         (err) => {
           this.profile.artistId = this.$route.params.uid;
-          this.itemList.splice(1, 0, "歌曲", "专辑", "MV");
-          this.$nextTick(() => {
-            this.$refs.inforTabnav.tabItem(0);
-          });
+          this.itemList.splice(1, 0, "歌曲", "专辑", "视频");
 
           getSingerAlbum(this.$route.params.uid).then((res) => {
             this.profile.backgroundUrl = res.data.artist.picUrl;
