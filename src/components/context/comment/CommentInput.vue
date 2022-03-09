@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { getAddComment, getDComment } from "network/comment";
+import { getAddComment} from "network/comment";
 
 export default {
   name: "CommentInput",
@@ -29,15 +29,8 @@ export default {
       type: String,
       default: "",
     },
-    isDynamic: {
-      type: Boolean,
-      default: false,
-    },
-    isComment: {
-      type: Boolean,
-      default: false,
-    },
   },
+  emits: ['successComment'],
   data() {
     return {
       content: "",
@@ -46,7 +39,7 @@ export default {
   },
   methods: {
     send() {
-      if (!this.$store.state.token) {
+      if (!this.$store.state.cookie) {
         this.$router.push("/login");
       } else {
         if (this.comment !== "") {
@@ -55,21 +48,24 @@ export default {
             this.type,
             this.id,
             this.content,
-            this.$store.state.token
+            this.$store.state.cookie
           ).then((res) => {
             console.log(res);
             // 保存数据
-            this.commentDetail.id = res.data.comment.user.userId;
+            this.commentDetail = res.data.comment;
             this.commentDetail.content = res.data.comment.content;
             this.commentDetail.time = res.data.comment.time;
-            this.commentDetail.avatarUrl = res.data.comment.user.avatarUrl;
-            this.commentDetail.nickname = res.data.comment.user.nickname;
+            this.commentDetail.user.avatarUrl = res.data.comment.user.avatarUrl;
+            this.commentDetail.user.nickname = res.data.comment.user.nickname;
             this.$toast("发布成功", 1900);
             this.content = ""; // 清空内容
             this.$emit("successComment", this.commentDetail);
+          }).catch((err) => {
+            this.$toast("网络出错！", 1900);
+            this.$router.push("/login");
           });
         } else {
-          this.$toast("内容不能为空", 1900);
+          this.$toast("内容不能为空");
         }
       }
     },

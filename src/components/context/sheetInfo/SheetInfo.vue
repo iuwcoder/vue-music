@@ -2,7 +2,7 @@
   <div class="sheet-info">
     <menu-nav
       class="menu-nav"
-      :navTitle="'歌单 ®'"
+      :navTitle="navTitle"
       :style="menuStyle"
     ></menu-nav>
     <scroll class="detail-content" :probe-type="3" @scroll="onScroll">
@@ -19,7 +19,7 @@
             <div class="top">
               <div class="top-img">
                 <img class="pic" v-lazy="sheetInfo.coverImgUrl" alt="" />
-                <div class="count">▷ {{ sheetInfo.playCount }}</div>
+                <div class="count" v-if="this.$route.params.isType == 'true'">▷ {{ sheetInfo.playCount }}</div>
               </div>
               <div class="right">
                 <div class="title">{{ sheetInfo.name }}</div>
@@ -35,8 +35,8 @@
         <div ref="sheetNav">
           <sheet-nav class="nav" :sheetNav="sheetInfo"></sheet-nav>
         </div>
-        <song-nav :trackCount="sheetInfo.trackCount"></song-nav>
-        <song-item :songList="songs" @select="selectItem"></song-item>
+        <!-- <song-nav :trackCount="sheetInfo.trackCount"></song-nav> -->
+        <!-- <song-item :songList="songs" @select="selectItem"></song-item> -->
       </div>
     </scroll>
   </div>
@@ -68,10 +68,12 @@ export default {
   },
   data() {
     return {
+      navTitle: "歌单®",
       sheetId: this.$route.params.id, // 保存路由传递的歌单id
-      sheetInfo: [], //歌单信息
+      sheetInfo: {}, //歌单信息
       songs: [], // 歌曲列表
       isShow: false,
+      index: 0, // 判断是专辑还是歌单
       scrollY: 0, //滚动位置
       tabOffsetTop: 0, //最大滚动位置
     };
@@ -96,6 +98,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["selectPlay", "randomPlay"]),
     // 顺序播放
     selectItem({ item, index }) {
       this.selectPlay({
@@ -111,57 +114,62 @@ export default {
     onScroll(pos) {
       this.scrollY = -pos.y;
     },
-    ...mapActions(["selectPlay", "randomPlay"]),
+    getSong(id) {
+      getSongDetial(id.toString()).then((res) => {
+        let result = res.data.songs[0];
+        playSong(id).then((res) => {
+          let music = res.data.data[0];
+          getlyric(id).then((res) => {
+            this.songs.push({
+              singers: result.ar[0].name, // 歌手
+              navTitle: result.name, // 歌曲名称
+              yuanc: result.alia, //歌曲别名
+              zhuanji: result.al.name, //专辑名称
+              mv: result.mv,
+              id: result.id, // 歌曲id
+              bgimg: result.al.picUrl, // 歌曲封面
+              url: music.url, // 歌曲url
+              lrc: res.data.lrc.lyric, //歌词
+            });
+            // console.log(this.songs);
+          });
+        });
+      });
+    },
   },
   mounted() {
     // 保存导航栏距离顶部的距离
     this.tabOffsetTop = this.$refs.sheetNav.offsetTop - 44;
   },
   created() {
-    // if (this.$route.params.isAlbum == "false") {
-    getSheetDetial(this.sheetId).then((res) => {
-      let path = res.data.playlist;
-      this.sheetInfo.name = path.name; // 歌单名称
-      this.sheetInfo.coverImgUrl = path.coverImgUrl; // 歌单封面
-      this.sheetInfo.desc = path.description; // 歌单描述
+    if (this.$route.params.isType == "true") {
+      getSheetDetial(this.sheetId).then((res) => {
+        let path = res.data.playlist;
+        this.sheetInfo.name = path.name; // 歌单名称
+        this.sheetInfo.coverImgUrl = path.coverImgUrl; // 歌单封面
+        this.sheetInfo.desc = path.description; // 歌单描述
 
-      this.sheetInfo.avatarUrl = path.creator.avatarUrl; // 用户头像
-      this.sheetInfo.nickname = path.creator.nickname; // 用户名
-      this.sheetInfo.userId = path.creator.userId; // 用户id
+        this.sheetInfo.avatarUrl = path.creator.avatarUrl; // 用户头像
+        this.sheetInfo.nickname = path.creator.nickname; // 用户名
+        this.sheetInfo.userId = path.creator.userId; // 用户id
 
-      this.sheetInfo.playCount = toStringNum(path.playCount); // 歌单播放量
-      this.sheetInfo.trackCount = path.trackCount; // 歌单歌曲数量
-      this.sheetInfo.commentCount = path.commentCount; // 歌单评论数
-      this.sheetInfo.subCount = toStringNum(path.subscribedCount); // 歌单收藏数
-      this.sheetInfo.shareCount = path.shareCount; // 歌单分享数
+        this.sheetInfo.playCount = toStringNum(path.playCount); // 歌单播放量
+        this.sheetInfo.trackCount = path.trackCount; // 歌单歌曲数量
+        this.sheetInfo.commentCount = path.commentCount; // 歌单评论数
+        this.sheetInfo.subCount = toStringNum(path.subscribedCount); // 歌单收藏数
+        this.sheetInfo.shareCount = path.shareCount; // 歌单分享数
 
-      // this.$store.state.createId = path.creator.userId;
-      this.isShow = true;
-      for (const item of path.trackIds) {
-        getSongDetial(item.id.toString()).then((res) => {
-          let result = res.data.songs[0];
-          playSong(item.id).then((res) => {
-            let music = res.data.data[0];
-            getlyric(item.id).then((res) => {
-              this.songs.push({
-                singers: result.ar[0].name, // 歌手
-                navTitle: result.name, // 歌曲名称
-                yuanc: result.alia, //歌曲别名
-                zhuanji: result.al.name, //专辑名称
-                mv: result.mv,
-                id: result.id, // 歌曲id
-                bgimg: result.al.picUrl, // 歌曲封面
-                url: music.url, // 歌曲url
-                lrc: res.data.lrc.lyric, //歌词
-              });
-              // console.log(this.songs);
-            });
-          });
-        });
-      }
-    });
-    // } else {
-    // }
+        // this.$store.state.createId = path.creator.userId;
+        this.isShow = true;
+        for (const item of path.trackIds) {
+          this.getSong(item.id);
+        }
+      });
+    } else if (this.$route.params.isType == "false") {
+      getAlbum(this.$route.params.id).then((res) => {
+        console.log(res);
+      })
+    }
   },
   // },
 };

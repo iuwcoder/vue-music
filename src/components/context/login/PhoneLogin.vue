@@ -47,7 +47,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["changeLogin", "setUserId"]),
+    ...mapMutations(["changeLogin", "setUserId", "setCookie"]),
     login() {
       let reg = /^1[3-8][0-9]{9}$/;
       if (reg.test(this.tel)) {
@@ -57,10 +57,12 @@ export default {
             if (res.data["code"] === 200) {
               this.$toast('登录成功', 1900);
               this.$router.push("/discover");
-              this.userToken = res.data.token;
-              this.changeLogin(this.userToken);
               this.userId = res.data.profile.userId;
+              this.userToken = res.data.token;
+              this.cookie = res.data.cookie;
               this.setUserId(this.userId);
+              this.changeLogin(this.userToken);             
+              this.setCookie(this.cookie);
             } else {
               this.$toast("密码错误！", 1900);
             }

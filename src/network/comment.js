@@ -1,6 +1,4 @@
-import {
-  request
-} from "./request";
+import { request } from "./request";
 
 // 评论
 export function getComment(id, type, sortType, pageNo, pageSize) {
@@ -18,7 +16,7 @@ export function getComment(id, type, sortType, pageNo, pageSize) {
 }
 
 // 评论点赞
-export function likeComment(id, cid, t, type, token) {
+export function likeComment(id, cid, t, type, cookie) {
   return request({
       url: '/comment/like',
       params: {
@@ -26,7 +24,7 @@ export function likeComment(id, cid, t, type, token) {
           cid, 
           t, 
           type,
-          token
+          cookie
       }
   })
 }

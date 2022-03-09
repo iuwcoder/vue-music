@@ -47,7 +47,7 @@ export default {
     },
         // 路由跳转
     albumShow(id) {
-      this.$router.push("/SheetInfo/" + id + "&" + true);
+      this.$router.push("/SheetInfo/" + id + '&' + false);
     },
   },
   created() {

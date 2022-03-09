@@ -40,15 +40,22 @@ const mutations = {
     })
   },
 
+  // 存储用户id
   setUserId(state, data) {
     state.userId = data
     localStorage.setItem('userId', data);
   },
 
   // 修改token，并将token存入localStorage
-  changeLogin (state, token) {
+  changeLogin(state, token) {
     state.token = token;
     localStorage.setItem('token', token);
+  },
+
+  // 存储cookie
+  setCookie(state, cookie) {
+    state.cookie = cookie
+    localStorage.setItem('cookie', cookie)
   },
 
   // 设置搜索历史

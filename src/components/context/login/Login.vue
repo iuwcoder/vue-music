@@ -48,7 +48,7 @@ export default {
     },
     // 手机登录组件
     phoneLogin() {
-      this.$router.push("/userCenter/login/phoneLogin");
+      this.$router.push("/login/phoneLogin");
     },
   },
 };

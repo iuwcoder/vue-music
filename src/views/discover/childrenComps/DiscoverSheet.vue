@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     toSheet(id) {
-      this.$router.push("/SheetInfo/" + id);
+      this.$router.push("/SheetInfo/" + id + '&' + true);
     },
     Sheet() {
       this.$router.push("/discover/moreSheet");

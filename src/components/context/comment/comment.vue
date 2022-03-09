@@ -10,7 +10,7 @@
       <div class="title">评论区</div>
       <switches
         class="switches"
-        :items="['推荐', '最新']"
+        :items="['推荐', '最热', '最新']"
         v-model="currentIndex"
         @click="changeType(currentIndex)"
       ></switches>
@@ -34,19 +34,22 @@
               <div class="top-box">
                 <div class="user-name">
                   {{ item.user.nickname }}
-                  <div class="add-time">{{ $filters.getTime(item.time) }}</div>
+                  <div class="add-time" v-if="currentIndex == 0">
+                    {{ $filters.getTime(item.time) }}
+                  </div>
+                  <div class="add-time" v-else>{{ item.timeStr }}</div>
                 </div>
-                <div class="liked">
+                <div class="liked" @click="likeComment(item)">
                   <div
                     class="count"
-                    :class="[t == 0 ? '' : 'likeComment']"
-                    @click="changeLike(item)"
+                    v-show="item.likedCount !== 0"
+                    :class="[item.t == 1 ? 'likeComment' : '']"           
                   >
                     {{ item.likedCount }}
                   </div>
                   <i
                     class="iconfont icon-zan"
-                    :class="[t == 0 ? '' : 'likeComment']"
+                    :class="[item.t == 1 ? 'likeComment' : '']"
                   ></i>
                 </div>
               </div>
@@ -91,11 +94,11 @@ export default {
       type: 2, //评论类型
       pageNo: 1, //分页
       pageSize: 20, //分页条数
-      sortType: 1, //排序方式
-      commentCount: "", //评论数量
-      commentList: [], //评论信息
-      commentList: [], // 发表评论内容
-      currentIndex: 0, 
+      sortType: 99, //排序方式
+      // commentCount: "", //评论数量
+      commentList: [], //评论内容
+      currentIndex: 0,
+      hasMore: true, //是否有更多评论
       t: 0, //点赞标识
     };
   },
@@ -112,55 +115,57 @@ export default {
     changeType(index) {
       this.currentIndex = index;
       switch (index) {
-        case 0:
+        case 0: //推荐
           this.commentList = [];
-          this.getCommentList(this.$route.params.id, this.type, 1);
+          this.getCommentList(this.$route.params.id, this.type, 99);
           break;
-        case 1:
+        case 1: // 最热
+          this.commentList = [];
+          this.getCommentList(this.$route.params.id, this.type, 2);
+          break;
+        case 2: //最新
           this.commentList = [];
           this.getCommentList(this.$route.params.id, this.type, 3);
           break;
       }
     },
     // 点赞评论
-    changeLike(item) {
-      if (this.t == 0) {
-        this.t = 1;
+    likeComment(item) {
+      if (item.t == 1) {
+        item.t = 0
         likeComment(
-          this.$route.params.id,
-          item.commentId,
-          this.t,
-          2,
-          this.$store.state.token
-        ).then((res) => {
-          item.likedCount++;
-        });
-        console.log(item.commentId);
+        this.$route.params.id,
+        item.commentId,
+        item.t,
+        this.type,
+        this.$store.state.cookie).then(res => {
+          item.likedCount --
+        })
       } else {
-        this.t = 0;
+        item.t = 1
         likeComment(
           this.$route.params.id,
           item.commentId,
-          this.t,
-          2,
-          this.$store.state.token
-        ).then((res) => {
-          item.likedCount--;
-        });
+          item.t,
+          this.type,
+          this.$store.state.cookie).then(res => {
+          item.likedCount ++
+        })
       }
     },
 
     // 发表评论
     successComment(commentDetail) {
-      this.commentList.unshift({
-        content: commentDetail.content, // 评论内容
-        likedCount: 0, // 喜欢数量
-        time: commentDetail.time, // 发布时间戳
-        userImg: commentDetail.avatarUrl, // 用户头像
-        userName: commentDetail.nickname, // 用户昵称
-        userId: commentDetail.id, // 用户id
-        t: commentDetail.t,
-      });
+      this.commentList.unshift(
+        commentDetail
+        // content: commentDetail.content, // 评论内容
+        // likedCount: 0, // 喜欢数量
+        // time: commentDetail.time, // 发布时间戳
+        // avatarUrl: commentDetail.avatarUrl, // 用户头像
+        // nickname: commentDetail.nickname, // 用户昵称
+        // userId: commentDetail.id, // 用户id
+        // t: commentDetail.t,
+      );
     },
 
     // 评论内容请求
@@ -170,6 +175,7 @@ export default {
         getComment(id, 0, sortType, pageNo, pageSize).then((res) => {
           console.log(res);
           this.commentCount = res.data.data.totalCount;
+          this.hasMore = res.data.hasMore
           for (const item of res.data.data.comments) {
             this.commentList.push(item);
           }
@@ -215,11 +221,12 @@ export default {
     justify-content: space-between;
     margin: 0 10px 10px 10px;
     .title {
-      flex: 1;
+      flex: 4;
       color: $color-text;
       font-size: 15px;
     }
     .switches {
+      flex: 2.5;
       border: none;
       width: 100px;
       font-size: 14px;
@@ -259,8 +266,10 @@ export default {
             overflow: hidden;
             white-space: nowrap;
             .add-time {
-              margin-top: 3px;
-              font-size: 10px;
+              margin-top: 5px;
+              font-size: 12px;
+              // -webkit-transform-origin-x: 0;
+              // -webkit-transform: scale(0.90); //字体变小
               color: $color-text1;
             }
           }

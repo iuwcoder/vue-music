@@ -123,16 +123,16 @@ export default {
     },
     // 用户喜欢的音乐
     userLike() {
-      this.$router.push("/SheetInfo/" + this.likeSheet.id + "&" + false);
+      this.$router.push("/SheetInfo/" + this.likeSheet.id + '&' + true);
     },
     // 用户创建的歌单
     userSheet(id) {
-      this.$router.push("/SheetInfo/" + id);
+      this.$router.push("/SheetInfo/" + id + '&' + true);
     },
 
     // 用户收藏的歌单
     sheet(id) {
-      this.$router.push("/SheetInfo/" + id);
+      this.$router.push("/SheetInfo/" + id + '&' + true);
     },
   },
   created() {

@@ -25,23 +25,19 @@ export function getHotSheet(order, cat, limit, offset) {
   })
 }
 
-// 新歌速递
-export function getSongsTop(type) {
+// 歌单标签列表
+export function getSheetTags() {
   return request({
-    url: '/top/song',
-    params: {
-      type
-    }
+    url: '/playlist/hot',
   })
 }
 
-// 最新MV
-export function getNewMv(area, limit) {
+// 获取歌单详情
+export function getSheetDetial(id) {
   return request({
-    url: '/mv/first',
+    url: '/playlist/detail',
     params: {
-      area,
-      limit
+      id
     }
   })
 }
@@ -83,24 +79,15 @@ export function getSinger(limit, offset, type, area) {
   })
 }
 
-
-// 歌单标签列表
-export function getSheetTags() {
+// 新歌速递
+export function getSongsTop(type) {
   return request({
-    url: '/playlist/hot',
-  })
-}
-
-// 获取歌单详情
-export function getSheetDetial(id) {
-  return request({
-    url: '/playlist/detail',
+    url: '/top/song',
     params: {
-      id
+      type
     }
   })
 }
-
 
 // 每日推荐歌曲
 export function getRecommendSong(cookie) {
@@ -108,6 +95,17 @@ export function getRecommendSong(cookie) {
     url: '/recommend/songs',
     params: {
       cookie
+    }
+  })
+}
+
+// 最新MV
+export function getNewMv(area, limit) {
+  return request({
+    url: '/mv/first',
+    params: {
+      area,
+      limit
     }
   })
 }

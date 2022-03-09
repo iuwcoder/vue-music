@@ -40,7 +40,7 @@ export default {
   props: ["sheetList", "nickName", "sheet"],
   methods: {
     sheetInfo(id) {
-      this.$router.push("/SheetInfo/" + id); // 跳转到歌单页面
+      this.$router.push("/SheetInfo/" + id + '&' + true); // 跳转到歌单页面
     },
   },
 };

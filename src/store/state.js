@@ -14,9 +14,12 @@ const state = {
   searchHistory: load(SEARCH_KEY), //搜索历史
   playHistory: load(PLAY_KEY), //播放历史
 
-  userId: localStorage.getItem('userId') ? localStorage.getItem('userId') : '', //用户id
+  //用户id
+  userId: localStorage.getItem('userId') ? localStorage.getItem('userId') : '',
   // 存储token
   token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
+  //cookie
+  cookie: localStorage.getItem('token') ? localStorage.getItem('cookie') : '',
 
   // userId: load(USERID_KEY),
   // token: load(TOKRN_KEY),

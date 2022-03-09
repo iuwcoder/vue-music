@@ -26,7 +26,7 @@ const search = () => import('@/views/search/Search' /* webpackChunkName: "search
 
 // 登录
 const Login = () => import('@/components/context/login/Login' /* webpackChunkName: "login" */) //登录
-const PhoneLogin = () => import('@/components/context/login/PhoneLogin' /* webpackChunkName: "phonr-login" */) //手机号登录
+const PhoneLogin = () => import('@/components/context/login/PhoneLogin' /* webpackChunkName: "phone-login" */) //手机号登录
 
 // 个人中心
 const userCenter = () => import('@/views/user/UserCenter' /* webpackChunkName: "user-center" */)
@@ -70,15 +70,12 @@ const routes = [{
   },
 
   { // 歌单/专辑内容
-    path: '/SheetInfo/:id',
+    path: '/SheetInfo/:id&:isType',
     component: SheetInfo,
   },
   { // 评论
     path: '/Comment/:id&:isType', 
     component: Comment,
-    meta: {
-      // BottomShow: false
-    }
   },
   // { // 播放界面
   //   path: '/PlaySong/:sid',
@@ -103,11 +100,11 @@ const routes = [{
     },
   },
   { // 登录
-    path: '/userCenter/login',
+    path: '/login',
     component: Login,
   },
   { // 手机号登录
-    path: '/userCenter/login/phoneLogin',
+    path: '/login/phoneLogin',
     component: PhoneLogin,
   },
   { // 最近播放

@@ -1,5 +1,5 @@
 <template>
-  <router-link to="/userCenter/login" tag="div">
+  <router-link to="/login" tag="div">
     <div class="box">
       <div class="user-login">
         <div class="user-img">

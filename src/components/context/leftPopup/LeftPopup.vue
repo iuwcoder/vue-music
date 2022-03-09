@@ -21,7 +21,7 @@
         </div>
       </div>
     </router-link>
-    <router-link to="/userCenter/login" tag="div" v-else>
+    <router-link to="/login" tag="div" v-else>
       <div class="user-content">
         <div class="user-img">
           <i class="iconfont icon-yonghu"></i>

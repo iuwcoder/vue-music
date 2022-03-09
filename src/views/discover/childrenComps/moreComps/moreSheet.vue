@@ -64,7 +64,7 @@ export default {
     },
     // 歌单详情页跳转
     toClick(id) {
-      this.$router.push("/SheetInfo/" + id);
+      this.$router.push("/SheetInfo/" + id + '&' + true);
       // this.$router.push("/SheetInfo/" + id + "&" + false);
     },
 

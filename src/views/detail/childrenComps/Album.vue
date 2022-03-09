@@ -40,7 +40,7 @@ export default {
   methods: {
     // 专辑详情页
     showAlbum(id) {
-      this.$router.push("/SheetInfo/" + id + "&" + true);
+      this.$router.push("/SheetInfo/" + id + "&" + false);
     },
     singerAlbum() {
       if (this.more) {
