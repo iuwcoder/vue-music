@@ -40,6 +40,7 @@ export default {
   methods: {
     send() {
       if (!this.$store.state.cookie) {
+        this.$toast("登录后才能评论");
         this.$router.push("/login");
       } else {
         if (this.comment !== "") {

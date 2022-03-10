@@ -148,6 +148,7 @@ export default {
       }
     }
 
+    // 添加歌曲
     function selectSong({ song }) {
       addSong(song)
     }

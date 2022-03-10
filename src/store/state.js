@@ -1,4 +1,4 @@
-import { PLAY_MODE, FAVORITE_KEY, SEARCH_KEY, PLAY_KEY, USERID_KEY, TOKRN_KEY } from "@/assets/js/constant"
+import { PLAY_MODE, FAVORITE_KEY, SEARCH_KEY, PLAY_KEY, SHEETSONG_KEY, TOKRN_KEY } from "@/assets/js/constant"
 import { load } from "@/assets/js/array-store"
 
 
@@ -13,6 +13,7 @@ const state = {
   playDuration: '', //歌曲时长
   searchHistory: load(SEARCH_KEY), //搜索历史
   playHistory: load(PLAY_KEY), //播放历史
+  sheetSong: load(SHEETSONG_KEY), //添加歌单歌曲
 
   //用户id
   userId: localStorage.getItem('userId') ? localStorage.getItem('userId') : '',

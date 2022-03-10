@@ -2,40 +2,54 @@
   <div class="user-sheet">
     <div class="box">
       <div class="top">
-        <div class="left">创建歌单 ({{ this.$store.state.userId !== "" ? sheetLength : 0 }}个)</div>
-        <div class="center">
-          <i class="iconfont icon-add"></i>
+        <div class="left">
+          创建歌单 ({{ this.$store.state.userId !== "" ? sheetLength : 0 }}个)
+        </div>
+        <div class="center" @click="addSheet">
+          <i class="iconfont icon-tianjia"></i>
         </div>
         <div class="right">
           <i class="iconfont icon-sandian"></i>
         </div>
       </div>
-      <user-sheet-list :sheetList="playList" :nickName="nickName" :sheet="sheet"></user-sheet-list>
+      <user-sheet-list
+        :sheetList="playList"
+        :nickName="nickName"
+        :sheet="sheet"
+      ></user-sheet-list>
     </div>
     <div class="box">
       <div class="top">
         <div class="left">收藏歌单 ({{ sheetCollectionLength }}个)</div>
         <div class="center">
-          <i class="iconfont icon-add"></i>
+          <i class="iconfont icon-tianjia"></i>
         </div>
         <div class="right">
           <i class="iconfont icon-sandian"></i>
         </div>
       </div>
-      <user-sheet-list v-if="sheetCollectionLength !== 0" :sheetList="playList" :nickName="nickName"></user-sheet-list>
+      <user-sheet-list
+        v-if="sheetCollectionLength !== 0"
+        :sheetList="playList"
+        :nickName="nickName"
+      ></user-sheet-list>
       <div class="nosheet" v-else>暂时还没有收藏歌单</div>
     </div>
+    <create-sheet ref="addSheetRef" @successSheet="successSheet"></create-sheet>
   </div>
 </template>
 
 <script>
 import UserSheetList from "@/components/context/userSheetList/UserSheetList";
+import CreateSheet from "@/components/context/sheet/CreateSheet";
+
 import { getUserDetail, getUserPlayList } from "network/user"; // 用户信息
 
 export default {
   name: "UserSheet",
   components: {
     UserSheetList,
+    CreateSheet,
   },
   data() {
     return {
@@ -53,19 +67,29 @@ export default {
       );
     },
     sheetCollectionLength() {
-      return this.playList.filter(
-        (item) => item.creator !== this.nickName
-      ).length;
+      return this.playList.filter((item) => item.creator !== this.nickName)
+        .length;
+    },
+  },
+  methods: {
+    // 添加歌单
+    addSheet() {
+      this.$refs.addSheetRef.showPopup();
+    },
+    // 新建歌单的数据
+    successSheet(createSheet) {
+      this.playList.unshift(
+        createSheet
+      );
     },
   },
 
   created() {
     getUserDetail(this.$store.state.userId).then((res) => {
       this.nickName = res.data.profile.nickname; // 用户名
-      console.log(res);
     });
     getUserPlayList(this.$store.state.userId).then((res) => {
-      // console.log(res);
+      console.log(res);
       for (const item of res.data.playlist) {
         this.playList.push({
           name: item.name, //歌单名称
@@ -104,9 +128,9 @@ export default {
       }
       .center {
         flex: 5;
-        .icon-add {
+        .icon-tianjia {
           float: right;
-          font-size: 16px;
+          font-size: 18px;
         }
       }
       .right {

@@ -8,16 +8,16 @@
         </div>
       </div>
     </div>
+    <!-- <song-nav :trackCount="50"></song-nav> -->
+
     <div>
-      <song-item
-        :songList="songs"
-        @select="selectItem"
-      ></song-item>
+      <song-item :songList="songs" @select="selectItem"></song-item>
     </div>
   </div>
 </template>
 
 <script>
+import SongNav from "@/components/context/songItem/SongNav";
 import SongItem from "@/components/context/songItem/SongItem";
 import { getSongsList } from "network/singer";
 import { getSongDetial, getlyric } from "network/played"; // 获取歌曲基本信息 歌词 评论
@@ -27,6 +27,7 @@ import { mapActions } from "vuex";
 export default {
   name: "SongList",
   components: {
+    SongNav,
     SongItem,
   },
   props: ["artistId"],
@@ -51,9 +52,7 @@ export default {
     toggle() {
       this.randomPlay(this.songs);
     },
-    getSong() {
-      
-    },
+    getSong() {},
 
     songsList(order) {
       getSongsList(this.artistId, order, 50).then((res) => {
@@ -80,7 +79,7 @@ export default {
           });
         }
         // console.log(this.songs);
-        
+
         // this.song.map((item2, index2) => {
         //   console.log(item2);
         //   this.songs.map((item1) => {
@@ -90,7 +89,7 @@ export default {
         //   });
         //   return this.songs;
         // });
-        
+
         // console.log(this.song);
         // let songsList = this.songs.map((item, index) => {
         //   return { ...item, ...this.song[index] };

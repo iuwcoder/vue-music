@@ -1,11 +1,6 @@
 <template>
   <div class="songList">
-    <div
-      class="songSheet1"
-      @click="sheetInfo(item.id)"
-      v-for="(item, index) in sheetList"
-      :key="index"
-    >
+    <div class="songSheet1" v-for="(item, index) in sheetList" :key="index">
       <div
         class="songSheet"
         v-if="
@@ -17,7 +12,7 @@
         <div class="left">
           <img :src="item.img" alt="" />
         </div>
-        <div class="center">
+        <div class="center" @click="sheetInfo(item.id)">
           <div class="sheetDetail">
             <div class="listName">{{ item.name }}</div>
             <div class="count">
@@ -26,22 +21,36 @@
             </div>
           </div>
         </div>
-        <div class="right">
+        <div class="right" @click="delet">
           <i class="iconfont icon-sandian"></i>
         </div>
       </div>
     </div>
+    <delete-sheet ref="deleteSheetRef" :deSheet="sheetList" @deleteSheet="deleteSheet"></delete-sheet>
   </div>
 </template>
 
 <script>
+import DeleteSheet from "@/components/context/sheet/DeleteSheet";
+
 export default {
   name: "UserSheetList",
   props: ["sheetList", "nickName", "sheet"],
+  components: {
+    DeleteSheet,
+  },
   methods: {
     sheetInfo(id) {
-      this.$router.push("/SheetInfo/" + id + '&' + true); // 跳转到歌单页面
+      this.$router.push("/SheetInfo/" + id + "&" + true); // 跳转到歌单页面
     },
+
+    // 展示删除歌单
+    delet() {
+      this.$refs.deleteSheetRef.showPopup();
+    },
+    deleteSheet() {
+      this.sheetList.shift()
+    }
   },
 };
 </script>

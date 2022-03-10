@@ -66,6 +66,11 @@ const mutations = {
   // 设置播放历史
   setPlayHistory(state, songs) {
     state.playHistory = songs
+  },
+
+  // 设置歌单歌曲内容
+  setSheetSong(state, songs) {
+    state.sheetSong = songs
   }
 
 }

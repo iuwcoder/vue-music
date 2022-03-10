@@ -18,7 +18,7 @@
 import { debounce } from 'throttle-debounce' //防抖
 
 export default {
-  name: "SearchInput",
+  name: "EnterInput",
   props: {
     modelValue: String, //搜索框内容
     placeholder: {

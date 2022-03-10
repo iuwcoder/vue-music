@@ -140,8 +140,8 @@ export default {
       profile: {}, // 用户信息
       itemList: ["主页"],
       pageY: 0,
-      showHome: true, // 显示/隐藏主页
-      showSongs: false, // 显示/隐藏歌曲
+      showHome: false, // 显示/隐藏主页
+      showSongs: true, // 显示/隐藏歌曲
       showAlbum: false, // 显示/隐藏专辑
       showMv: false, // 显示/隐藏mv
       navToTop: 0, // 导航栏距离顶部的距离

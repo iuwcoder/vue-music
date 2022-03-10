@@ -1,12 +1,14 @@
 <template>
   <div class="played">
     <menu-nav :navTitle="'最近播放'"></menu-nav>
-    <scroll class="scroll-content">
+    <music-list :trackCount="songLength" :songList="songs" @selectItem="selectItem"></music-list>
+
+    <!-- <scroll class="scroll-content">
       <div>
         <song-nav class="song-nav" :trackCount="songLength"></song-nav>
         <song-item :songList="songs" @select="selectItem"></song-item>
       </div>
-    </scroll>
+    </scroll> -->
   </div>
 </template>
 
@@ -15,6 +17,8 @@ import MenuNav from "@/components/common/menuNav/MenuNav.vue";
 import SongNav from "@/components/context/songItem/SongNav";
 import SongItem from "@/components/context/songItem/SongItem";
 import Scroll from "components/common/scroll/scroll.vue";
+import MusicList from "@/components/context/musicList/MusicList";
+
 
 import { getSongDetial, getlyric } from "network/played"; // 获取歌曲基本信息 歌词 评论
 import { playSong } from "network/songs"; // 获取音乐url
@@ -30,6 +34,7 @@ export default {
     SongNav,
     SongItem,
     Scroll,
+    MusicList
   },
   data() {
     return {

@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <search-input v-model="query"></search-input>
+    <enter-input v-model="query"></enter-input>
     <scroll class="content" ref="scrollRef">
       <div>
         <div class="search-history" v-show="searches.length && !query">
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import SearchInput from "./childrenComps/SearchInput.vue";
+import EnterInput from "@/components/context/enterInput/EnterInput.vue";
 import Suggest from "./childrenComps/Suggest.vue";
 import scroll from "components/common/scroll/scroll.vue";
 import Confirm from "@/components/common/confirm/confirm.vue";
@@ -67,7 +67,7 @@ import useSearchHistory from "./childrenComps/use-search-history";
 export default {
   name: "Search",
   components: {
-    SearchInput,
+    EnterInput,
     Suggest,
     scroll,
     Confirm,

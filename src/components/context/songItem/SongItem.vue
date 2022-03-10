@@ -1,48 +1,48 @@
 <template>
   <div class="SongItem" v-loading="!songList.length">
     <!-- <scroll class="song-content"> -->
-      <div>
-        <div
-          class="item"
-          v-for="(item, index) in songList"
-          :key="index"
-          @click="selectItem(item, index)"
-        >
-          <div class="itemBox">
-            <div class="index" v-if="shouLeft">
-              {{ index + 1 }}
-            </div>
-            <div class="pic" v-if="showPic">
-              <img v-lazy="item.picUrl" alt="" />
-            </div>
-            <div class="left">
-              <div class="leftContainer">
-                <div class="name">
-                  {{ item.navTitle }}
-                  <span v-if="item.yuanc.length !== 0" class="yuanc"
-                    >({{ item.yuanc[0] }})</span
-                  >
-                </div>
-                <div class="singer">
-                  <span>{{ item.singers }} </span>
-                  -
-                  {{ " " + item.zhuanji }}
-                </div>
+    <div>
+      <div
+        class="item"
+        v-for="(item, index) in songList"
+        :key="index"
+        @click="selectItem(item, index)"
+      >
+        <div class="itemBox">
+          <div class="index" v-if="shouLeft">
+            {{ index + 1 }}
+          </div>
+          <div class="pic" v-if="showPic">
+            <img v-lazy="item.picUrl" alt="" />
+          </div>
+          <div class="left">
+            <div class="leftContainer">
+              <div class="name">
+                {{ item.navTitle }}
+                <span v-if="item.yuanc.length !== 0" class="yuanc"
+                  >({{ item.yuanc[0] }})</span
+                >
+              </div>
+              <div class="singer">
+                <span>{{ item.singers }} </span>
+                -
+                {{ " " + item.zhuanji }}
               </div>
             </div>
-            <div class="mv">
-              <i
-                @click.stop="playMv(item.mv)"
-                v-if="item.mv !== 0"
-                class="iconfont icon-mv"
-              ></i>
-            </div>
-            <div class="more" @click.stop="moreMenu">
-              <i class="iconfont icon-sandian"></i>
-            </div>
+          </div>
+          <div class="mv">
+            <i
+              @click.stop="playMv(item.mv)"
+              v-if="item.mv !== 0"
+              class="iconfont icon-mv"
+            ></i>
+          </div>
+          <div class="more" @click.stop="moreMenu">
+            <i class="iconfont icon-sandian"></i>
           </div>
         </div>
       </div>
+    </div>
     <!-- </scroll> -->
   </div>
 </template>
@@ -72,13 +72,19 @@ export default {
     },
   },
   emits: ["select", "select-song"],
-  methods: { 
+  methods: {
+    // 播放歌曲
     selectItem(song, index) {
       this.$emit("select", { song, index });
     },
     selectSong(song) {
-      this.$emit('select-song', song)
+      this.$emit("select-song", song);
     },
+
+    // 添加歌曲到歌单
+    // sheetItem(song) {
+    //   this.$emit("sheet", { song, index });
+    // },
     moreMenu() {
       console.log(22);
     },

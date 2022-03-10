@@ -5,22 +5,25 @@
         <div class="header">
           <h1 class="title">添加歌曲到列表</h1>
           <div class="close" @click="hide">
-            <i class="iconfont icon-close"></i>
+            <i class="iconfont icon-fanhui"></i>
           </div>
         </div>
         <div class="search-input-wrapper">
-          <search-input
+          <enter-input
             v-model="query"
             placeholder="搜索歌曲"
             :showBack="false"
             :showSearch="true"
-          ></search-input>
+          ></enter-input>
         </div>
         <div v-show="!query">
-          <switches
+          <div class="title-1">
+            <span>最近播放</span>
+          </div>
+          <!-- <switches
             :items="['最近播放', '搜索历史']"
             v-model="currentIndex"
-          ></switches>
+          ></switches> -->
           <div class="list-wrapper">
             <scroll
               ref="scrollRef"
@@ -29,8 +32,12 @@
             >
               <song-item
                 :songList="playHistory"
-                @select="selectSongBySongList"
+                @select="sheetSongBySongList"
               ></song-item>
+              <!-- <song-item
+                :songList="playHistory"
+                @select="selectSongBySongList"
+              ></song-item> -->
             </scroll>
           </div>
         </div>
@@ -48,13 +55,14 @@
 </template>
 
 <script>
-import SearchInput from "@/views/search/childrenComps/SearchInput.vue";
+import EnterInput from "@/components/context/enterInput/EnterInput.vue";
 import Suggest from "@/views/search/childrenComps/Suggest.vue";
 import Switches from "@/components/common/switches/switches.vue";
 import SongItem from "@/components/context/songItem/SongItem";
 import Message from "@/components/common/message/message.vue";
 import scroll from "components/common/scroll/scroll.vue";
 import useSearchHistory from "@/views/search/childrenComps/use-search-history";
+import useSheetSong from "./use-sheet-song"
 
 import { useStore } from "vuex";
 import { computed, ref, nextTick, watch } from "vue";
@@ -62,7 +70,7 @@ import { computed, ref, nextTick, watch } from "vue";
 export default {
   name: "AddSong",
   components: {
-    SearchInput,
+    EnterInput,
     Suggest,
     Switches,
     SongItem,
@@ -80,7 +88,8 @@ export default {
     const searchHistory = computed(() => store.state.searchHistory);
     const playHistory = computed(() => store.state.playHistory);
 
-    const { saveSearch } = useSearchHistory();
+    // const { saveSheet } = useSearchHistory();
+    const { saveSheet } = useSheetSong();
 
     watch(query, async () => {
       await nextTick();
@@ -100,6 +109,7 @@ export default {
       scrollRef.value.scroll.refresh();
     }
 
+    // 添加歌曲到播放列表
     function selectSongBySongList({ song }) {
       addSong(song);
     }
@@ -109,10 +119,15 @@ export default {
       showMessage();
     }
 
+    function sheetSongBySongList({song}) {
+      saveSheet(song)
+      showMessage();
+    }
+
     // 展示添加成功消息弹窗
     function showMessage() {
       messageRef.value.show();
-      saveSearch()
+      // saveSearch()
     }
 
     return {
@@ -129,6 +144,9 @@ export default {
       show,
       hide,
       selectSongBySongList,
+      sheetSongBySongList,
+
+      saveSheet
     };
   },
 };
@@ -155,8 +173,8 @@ export default {
     .close {
       position: absolute;
       top: 0;
-      right: 8px;
-      .icon-close {
+      left: 8px;
+      .icon-fanhui {
         display: block;
         padding: 12px;
         font-size: 18px;
@@ -167,9 +185,15 @@ export default {
   .search-input-wrapper {
     margin: 15px 20px;
   }
+  .title-1 {
+    width: 100%;
+    margin: 20px 0 0 20px;
+    font-size: 15px;
+    color: $color-text1;
+  }
   .list-wrapper {
     position: absolute;
-    top: 165px;
+    top: 150px;
     bottom: 0;
     width: 100%;
     .list-scroll {
