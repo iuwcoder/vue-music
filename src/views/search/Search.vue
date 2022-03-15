@@ -184,9 +184,7 @@ export default {
             width: 90%;
             height: 100%;
             color: $color-text;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            @include no-wrap();
           }
         }
       }

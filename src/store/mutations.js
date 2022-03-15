@@ -68,7 +68,12 @@ const mutations = {
     state.playHistory = songs
   },
 
-  // 设置歌单歌曲内容
+  // 设置用户歌单
+  setUserSheet(state, sheets) {
+    state.userSheet = sheets
+  },
+
+  // 设置用户歌单歌曲内容
   setSheetSong(state, songs) {
     state.sheetSong = songs
   }

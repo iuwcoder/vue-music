@@ -33,11 +33,12 @@ export default {
   emits: ["select-song", "select-singer"],
   setup(props, { emit }) {
     const songs = ref([]); //歌曲
-    const songId = ref([]);
+    const songId = ref([]); //歌曲ID
     const singer = ref([]); //歌手
-    const hasMore = ref(true);
-    const offset = ref(0);
-    const manualLoading = ref(false); //
+    const hasMore = ref(true); //是否有分页
+    const offset = ref(0); //当前分页页数
+    const manualLoading = ref(false); 
+    
 
     const store = useStore();
 

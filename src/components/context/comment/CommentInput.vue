@@ -56,7 +56,7 @@ export default {
             this.commentDetail = res.data.comment;
             this.commentDetail.content = res.data.comment.content;
             this.commentDetail.time = res.data.comment.time;
-            this.commentDetail.user.avatarUrl = res.data.comment.user.avatarUrl;
+            this.commentDetail.user.avatarUr = res.data.comment.user.avatarUrl;
             this.commentDetail.user.nickname = res.data.comment.user.nickname;
             this.$toast("发布成功", 1900);
             this.content = ""; // 清空内容
@@ -100,6 +100,7 @@ export default {
     flex: 1.3;
     display: flex;
     justify-content: center;
+    @include extend-click();
     .icon-fasong {
       font-size: 20px;
     }

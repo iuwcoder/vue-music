@@ -35,6 +35,7 @@ import { Tabbar, TabbarItem } from 'vant'; //底部导航栏
 import { Slider } from 'vant';  //滑块
 import { Button } from 'vant';
 import { Popup } from 'vant'; //弹出层
+import { Popover } from 'vant'; //气泡弹出框
 import { Toast } from 'vant'; //提示
 import { ConfigProvider } from 'vant'; //自定义配置
 
@@ -50,6 +51,7 @@ app.use(TabbarItem);
 app.use(Slider);
 app.use(Button);
 app.use(Popup);
+app.use(Popover);
 app.use(Toast);
 app.use(ConfigProvider);
 

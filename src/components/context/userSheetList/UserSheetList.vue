@@ -1,6 +1,11 @@
 <template>
   <div class="songList">
-    <div class="songSheet1" v-for="(item, index) in sheetList" :key="index">
+    <div
+      class="songSheet1"
+      v-for="(item, index) in sheetList"
+      :key="index"
+      @click="selectItem(item, index)"
+    >
       <div
         class="songSheet"
         v-if="
@@ -21,40 +26,51 @@
             </div>
           </div>
         </div>
-        <div class="right" @click="delet">
+        <div class="right" @click="delet(index)">
           <i class="iconfont icon-sandian"></i>
         </div>
       </div>
     </div>
-    <delete-sheet ref="deleteSheetRef" :deSheet="sheetList" @deleteSheet="deleteSheet"></delete-sheet>
+    <song-pop
+      ref="deleteSheetRef"
+      :deSheet="sheetList"
+      @deleteSheet="deleteSheet"
+    ></song-pop>
   </div>
 </template>
 
 <script>
-import DeleteSheet from "@/components/context/sheet/DeleteSheet";
+import SongPop from "@/components/context/sheet/SongPop";
+import { mapMutations } from 'vuex'
 
 export default {
   name: "UserSheetList",
   props: ["sheetList", "nickName", "sheet"],
   components: {
-    DeleteSheet,
+    SongPop,
   },
   methods: {
     sheetInfo(id) {
-      this.$router.push("/SheetInfo/" + id + "&" + true); // 跳转到歌单页面
+      this.$router.push("/SheetInfo/" + id + "&" + 'user'); // 跳转到歌单页面
+    },
+
+    selectItem({ sheet, index }) {
+      this.$emit("select", { sheet, index });
     },
 
     // 展示删除歌单
-    delet() {
+    delet(index) {
+      console.log(this.sheetList.id);
       this.$refs.deleteSheetRef.showPopup();
     },
+
     deleteSheet() {
-      this.sheetList.shift()
-    }
+      // this.sheetList.shift()
+    },
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .left {
   flex: 1.5;
   border-radius: 8px;
@@ -72,9 +88,7 @@ export default {
   height: 22px;
   line-height: 22px;
   font-size: 15px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  @include no-wrap();
 }
 .count {
   font-size: 12px;

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import MenuNav from "@/components/common/menuNav/MenuNav.vue";
+import MenuNav from "@/components/context/menuNav/MenuNav.vue";
 import SongNav from "@/components/context/songItem/SongNav";
 import SongItem from "@/components/context/songItem/SongItem";
 import scroll from "components/common/scroll/scroll.vue";

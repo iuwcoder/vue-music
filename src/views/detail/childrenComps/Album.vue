@@ -85,10 +85,8 @@ export default {
     .right {
       margin: 8px 10px;
       .title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         font-size: 14px;
+        @include no-wrap();
         .sp {
           color: $color-text1;
         }

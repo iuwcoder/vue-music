@@ -1,4 +1,5 @@
 <template>
+<!-- <meta http-equiv="refresh" content="1"> -->
   <div class="user-sheet">
     <div class="box">
       <div class="top">
@@ -13,7 +14,7 @@
         </div>
       </div>
       <user-sheet-list
-        :sheetList="playList"
+        :sheetList="userSheet"
         :nickName="nickName"
         :sheet="sheet"
       ></user-sheet-list>
@@ -21,16 +22,13 @@
     <div class="box">
       <div class="top">
         <div class="left">收藏歌单 ({{ sheetCollectionLength }}个)</div>
-        <div class="center">
-          <i class="iconfont icon-tianjia"></i>
-        </div>
         <div class="right">
           <i class="iconfont icon-sandian"></i>
         </div>
       </div>
       <user-sheet-list
         v-if="sheetCollectionLength !== 0"
-        :sheetList="playList"
+        :sheetList="userSheet"
         :nickName="nickName"
       ></user-sheet-list>
       <div class="nosheet" v-else>暂时还没有收藏歌单</div>
@@ -42,8 +40,10 @@
 <script>
 import UserSheetList from "@/components/context/userSheetList/UserSheetList";
 import CreateSheet from "@/components/context/sheet/CreateSheet";
-
 import { getUserDetail, getUserPlayList } from "network/user"; // 用户信息
+import storage from "good-storage";
+import { USERSHEET_KEY } from "@/assets/js/constant";
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: "UserSheet",
@@ -54,33 +54,35 @@ export default {
   data() {
     return {
       sheet: "my",
-      playList: [],
+      sheetList: [],
       nickName: "",
     };
   },
   computed: {
+    ...mapState(['userSheet']),
     // 计算歌单数量
     sheetLength() {
       return (
-        this.playList.filter((item) => item.creator === this.nickName).length -
+        this.userSheet.filter((item) => item.creator === this.nickName).length -
         1
       );
     },
     sheetCollectionLength() {
-      return this.playList.filter((item) => item.creator !== this.nickName)
+      return this.userSheet.filter((item) => item.creator !== this.nickName)
         .length;
     },
   },
   methods: {
-    // 添加歌单
+    ...mapMutations(['setUserSheet']),
+
+    // 展示添加歌单
     addSheet() {
       this.$refs.addSheetRef.showPopup();
     },
     // 新建歌单的数据
     successSheet(createSheet) {
-      this.playList.unshift(
-        createSheet
-      );
+      this.sheetList.unshift(createSheet);
+      // window.location.reload();
     },
   },
 
@@ -91,14 +93,16 @@ export default {
     getUserPlayList(this.$store.state.userId).then((res) => {
       console.log(res);
       for (const item of res.data.playlist) {
-        this.playList.push({
+        this.sheetList.push({
           name: item.name, //歌单名称
-          id: item.id,
+          id: item.id, //歌单id
           img: item.coverImgUrl, //歌单图片
           playCount: item.playCount, //创建歌单数量
           trackCount: item.trackCount, //收藏歌单数量
           creator: item.creator.nickname, //用户名
         });
+       storage.set(USERSHEET_KEY, this.sheetList)
+       this.setUserSheet(storage.get(USERSHEET_KEY))
       }
     });
   },

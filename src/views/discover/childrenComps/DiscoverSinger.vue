@@ -125,10 +125,7 @@ export default {
         }
       }
       .name {
-        // width: 106px;
-        // overflow: hidden;
-        // text-overflow: ellipsis;
-        // white-space: nowrap;
+        @include no-wrap();
         text-align: center;
         font-size: 13px;
       }

@@ -61,7 +61,6 @@ export default {
             .then((res) => {
               this.name = this.query
               console.log(res);
-              console.log(this.name);
               // 保存数据
               this.createSheet.name = res.data.playlist.name
               this.createSheet.id = res.data.playlist.id
@@ -71,13 +70,12 @@ export default {
               this.createSheet.creator = res.data.playlist.creator
               this.$toast("添加成功", 1900);
               console.log(this.createSheet);
-              this.$router.push("/SheetInfo/" + this.createSheet.id + "&" + true); // 跳转到歌单页面
+              this.$router.push("/SheetInfo/" + this.createSheet.id + "&" + 'user'); // 跳转到歌单页面
               this.query = ""; // 清空内容
               this.$emit("successSheet", this.createSheet);
             })
             .catch((err) => {
-              this.$toast("添加失败！", 1900);
-              // this.$router.push("/login");
+              // this.$toast("添加失败！", 1900);
             });
         } else {
           this.$toast("内容不能为空");

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import MenuNav from "@/components/common/menuNav/MenuNav.vue";
+import MenuNav from "@/components/context/menuNav/MenuNav.vue";
 
 import { phoneLogin} from "network/login"; // 网络请求
 

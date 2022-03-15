@@ -16,10 +16,16 @@ module.exports = {
 	css: {
 		loaderOptions: {
 			sass: {
-				prependData: `@import "@/assets/scss/variable.scss";`,
+				prependData: `
+				@import "@/assets/scss/variable.scss";
+				@import "@/assets/scss/mixin.scss";
+				`,
 			},
 			scss: {
-				prependData: `@import "@/assets/scss/variable.scss";`
+				prependData: `
+				@import "@/assets/scss/variable.scss";
+				@import "@/assets/scss/mixin.scss";
+				`
 			},
 		},
 	},

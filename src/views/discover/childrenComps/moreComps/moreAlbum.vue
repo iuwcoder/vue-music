@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import MenuNav from "components/common/menuNav/MenuNav";
+import MenuNav from "components/context/menuNav/MenuNav";
 import Scroll from "components/common/scroll/scroll.vue";
 
 import { getNewAlbum } from "network/discover";
@@ -188,16 +188,12 @@ export default {
       }
       .album-name {
         width: 135px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         font-size: 14px;
         margin-top: 7px;
+        @include no-wrap();
       }
       .artist {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include no-wrap();
         font-size: 12px;
         color: $color-text1;
         margin-top: 5px;

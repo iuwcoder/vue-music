@@ -28,9 +28,9 @@
                   >{{ song.navTitle }}
                   <span class="singer">- {{ song.singers }}</span>
                 </span>
-                <span class="favorite" @click.stop="toggleFavorite(song)">
+                <!-- <span class="favorite" @click.stop="toggleFavorite(song)">
                   <i class="iconfont" :class="getFavoriteIcon(song)"></i>
-                </span>
+                </span> -->
                 <span class="delete" @click.stop="removeSong(song)">
                   <i class="iconfont icon-chacha"></i>
                 </span>
@@ -47,7 +47,7 @@
           text="是否清空播放列表？"
           confirm-btn-text="清空"
         ></confirm>
-        <add-song ref="addSongRef"></add-song>
+        <add-song ref="addSongRef" :AddSheet="false"></add-song>
       </div>
     </transition>
   </teleport>
@@ -251,12 +251,10 @@ export default {
           font-size: 17px;
           color: $color-text;
           margin-left: 10px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          @include no-wrap();
         }
         .clear, .add {
-          // @include extend-click();
+          @include extend-click();
           flex: 0.2;
           .iconfont {
             font-size: 22px;
@@ -282,24 +280,18 @@ export default {
         }
         .text {
           flex: 1;
-          // @include no-wrap();
           font-size: 16px;
           color: $color-text;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-
+          @include no-wrap();
           .singer {
             color: $color-text3;
             font-size: 10px;
             padding-left: 2px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            @include no-wrap();
           }
         }
         .favorite {
-          // @include extend-click();
+          @include extend-click();
           margin-right: 15px;
           font-size: 16px;
           color: $color-text2;

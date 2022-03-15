@@ -1,9 +1,20 @@
 <template>
   <div class="sheet-info">
     <menu-nav
+      v-if="userId == sheetInfo.userId"
+      class="menu-nav"
+      :navTitle="navTitle"
+      :showRight="true"
+      :style="menuStyle"
+      :sheetId="sheetId"
+      @clearSheet="clearSheetSong"
+    ></menu-nav>
+    <menu-nav
+      v-else
       class="menu-nav"
       :navTitle="navTitle"
       :style="menuStyle"
+      :sheetId="sheetId"
     ></menu-nav>
     <scroll class="detail-content" :probe-type="3" @scroll="onScroll">
       <div>
@@ -37,28 +48,31 @@
         <div ref="sheetNav">
           <sheet-nav class="nav" :sheetNav="sheetInfo"></sheet-nav>
         </div>
-        <div v-if="songs.length">
+        <div v-if="this.$route.params.isType !== 'user'">
           <song-nav :trackCount="sheetInfo.trackCount"></song-nav>
           <song-item :songList="songs" @select="selectItem"></song-item>
         </div>
         <div v-else>
-          <div class="add-song" v-if="this.$store.state.sheetSong == ''">
-            <van-button
-              class="btn"
-              plain
-              color="#ff4b41"
-              type="primary"
-              size="18px"
-              block
-              round
-              @click="showAddSong"
-              >添加歌曲</van-button
-            >
+          <div v-if="this.$route.params.isType == 'user'">
+            <div class="add-song" v-if="songs == ''">
+              <van-button
+                class="btn"
+                plain
+                color="#ff4b41"
+                type="primary"
+                size="18px"
+                block
+                round
+                @click="showAddSong"
+                >添加歌曲</van-button
+              >
+            </div>
+            <song-nav
+              v-if="songs.length"
+              :trackCount="sheetInfo.trackCount"
+            ></song-nav>
+            <song-item :songList="songs" @select="selectItem"></song-item>
           </div>
-          <!-- <song-item
-            :songList="this.$store.state.sheetSong"
-            @select="selectItem"
-          ></song-item> -->
         </div>
         <add-song ref="addSongRef"></add-song>
       </div>
@@ -67,15 +81,12 @@
 </template>
 
 <script>
-import MenuNav from "@/components/common/menuNav/MenuNav.vue";
+import MenuNav from "@/components/context/menuNav/MenuNav.vue";
 import SheetNav from "./SheetNav.vue";
 import SongNav from "@/components/context/songItem/SongNav";
 import SongItem from "@/components/context/songItem/SongItem";
 import scroll from "components/common/scroll/scroll.vue";
 import AddSong from "@/components/context/addSong/AddSong.vue";
-
-import storage from "good-storage";
-import { SHEET_KEY } from "@/assets/js/constant";
 
 import { toStringNum } from "common/common"; // 播放量转换
 
@@ -84,6 +95,8 @@ import { getAblum, getAlbumDetail } from "network/album"; // 专辑
 import { getSongDetial, getlyric } from "network/played"; // 获取歌曲基本信息 歌词 评论
 import { playSong } from "network/songs"; // 获取音乐url
 import { mapActions, mapMutations, mapState } from "vuex";
+import storage from "good-storage";
+import { SHEETSONG_KEY } from "@/assets/js/constant";
 
 export default {
   name: "SheetInfo",
@@ -108,6 +121,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["sheetSong", "userId"]),
     sheetCount() {
       return this.sheetInfo.trackIds.length !== 0;
     },
@@ -141,11 +155,6 @@ export default {
         list: this.songs,
         index,
       });
-      this.cacheSheet(this.songs)
-    },
-
-    back() {
-      this.$router.go(-1);
     },
 
     // 添加歌曲
@@ -153,15 +162,45 @@ export default {
       this.$refs.addSongRef.show();
     },
 
+    // 返回清空本地暂存的歌单歌曲
+    clearSheetSong() {
+      storage.remove(SHEETSONG_KEY);
+    },
+
+    // 监听BScroll滚动位置
     onScroll(pos) {
       this.scrollY = -pos.y;
     },
 
-    //存储歌单信息
-    cacheSheet(sheet) {
-      storage.session.set(SHEET_KEY, sheet);
+    // 获取歌单详情
+    getSheet(id) {
+      getSheetDetial(id).then((res) => {
+        console.log(res);
+        let path = res.data.playlist;
+        this.sheetInfo.id = path.id; //歌单id
+        this.sheetInfo.name = path.name; // 歌单名称
+        this.sheetInfo.coverImgUrl = path.coverImgUrl; // 歌单封面
+        this.sheetInfo.desc = path.description; // 歌单描述
+
+        this.sheetInfo.avatarUrl = path.creator.avatarUrl; // 用户头像
+        this.sheetInfo.nickname = path.creator.nickname; // 用户名
+        this.sheetInfo.userId = path.creator.userId; // 用户id
+
+        this.sheetInfo.playCount = toStringNum(path.playCount); // 歌单播放量
+        this.sheetInfo.trackCount = path.trackCount; // 歌单歌曲数量
+        this.sheetInfo.commentCount = path.commentCount; // 歌单评论数
+        this.sheetInfo.subCount = toStringNum(path.subscribedCount); // 歌单收藏数
+        this.sheetInfo.shareCount = path.shareCount; // 歌单分享数
+        this.sheetInfo.trackIds = path.trackIds; // 歌单分享数
+        // this.$store.state.createId = path.creator.userId;
+        this.isShow = true;
+        for (const item of path.trackIds) {
+          this.getSong(item.id);
+        }
+      });
     },
 
+    //获取歌曲详情
     getSong(id) {
       getSongDetial(id.toString()).then((res) => {
         let result = res.data.songs[0];
@@ -179,10 +218,8 @@ export default {
               url: music.url, // 歌曲url
               lrc: res.data.lrc.lyric, //歌词
             });
-            this.cacheSheet(this.songs)
-            // this.setSheetSong(this.songs)
-            
             // console.log(this.songs);
+            storage.set(SHEETSONG_KEY, this.songs);
           });
         });
       });
@@ -194,30 +231,14 @@ export default {
   },
   created() {
     if (this.$route.params.isType == "true") {
-      getSheetDetial(this.sheetId).then((res) => {
-        console.log(res);
-        let path = res.data.playlist;
-        this.sheetInfo.name = path.name; // 歌单名称
-        this.sheetInfo.coverImgUrl = path.coverImgUrl; // 歌单封面
-        this.sheetInfo.desc = path.description; // 歌单描述
+      this.getSheet(this.sheetId);
+    } else if (this.$route.params.isType == "user") {
+      console.log(this.songs);
+      this.getSheet(this.sheetId);
+      // window.location.reload()
 
-        this.sheetInfo.avatarUrl = path.creator.avatarUrl; // 用户头像
-        this.sheetInfo.nickname = path.creator.nickname; // 用户名
-        this.sheetInfo.userId = path.creator.userId; // 用户id
-
-        this.sheetInfo.playCount = toStringNum(path.playCount); // 歌单播放量
-        this.sheetInfo.trackCount = path.trackCount; // 歌单歌曲数量
-        this.sheetInfo.commentCount = path.commentCount; // 歌单评论数
-        this.sheetInfo.subCount = toStringNum(path.subscribedCount); // 歌单收藏数
-        this.sheetInfo.shareCount = path.shareCount; // 歌单分享数
-        this.sheetInfo.trackIds = path.trackIds; // 歌单分享数
-
-        // this.$store.state.createId = path.creator.userId;
-        this.isShow = true;
-        for (const item of path.trackIds) {
-          this.getSong(item.id);
-        }
-      });
+      storage.set(SHEETSONG_KEY, this.songs);
+      // this.setSheetSong(this.SHEET_KEY)
     } else if (this.$route.params.isType == "false") {
       getAblum(this.$route.params.id).then((res) => {
         console.log(res);
@@ -347,9 +368,7 @@ export default {
           .desc {
             font-size: 13px;
             color: $color-song;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            @include no-wrap();
           }
         }
       }

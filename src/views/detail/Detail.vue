@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import MenuNav from "@/components/common/menuNav/MenuNav.vue";
+import MenuNav from "@/components/context/menuNav/MenuNav.vue";
 import TabNav from "@/components/context/tabNav/TabNav";
 import HomePage from "./childrenComps/HomePage.vue";
 import SongList from "@/components/context/songItem/SongList";

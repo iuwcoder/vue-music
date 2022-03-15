@@ -16,34 +16,37 @@ export function getCreateSheet(name, privacy, type, cookie) {
 }
 
 // 删除歌单
-export function getDeletSheet(id) {
+export function getDeletSheet(id, cookie) {
   return request({
     url: '/playlist/delete',
     params: {
-      id
+      id,
+      cookie
     }
   })
 }
 
 // 收藏/取消收藏 歌单
-export function getSubSheet(id, t) {
+export function getSubSheet(id, t, cookie) {
   return request({
     url: '/playlist/subscribe',
     params: {
       id,
-      t // 类型 1:收藏 2:取消收藏 
+      t, // 类型 1:收藏 2:取消收藏 
+      cookie
     }
   })
 }
 
 // 对歌单添加或删除歌曲
-export function getTracksSheet(op, pid, tracks) {
+export function getTracksSheet(op, pid, tracks, cookie) {
   return request({
     url: '/playlist/tracks',
     params: {
       op, //增加 add, 删除为 del
       pid, //歌单id
       tracks, //歌曲id
+      cookie
     }
   })
 }

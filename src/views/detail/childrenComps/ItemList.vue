@@ -109,17 +109,13 @@ export default {
         font-size: 14px;
         width: 270px;
         margin-bottom: 3px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include no-wrap();
       }
       .count {
         font-size: 12px;
         color: $color-text1;
         width: 270px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include no-wrap();
       }
     }
   }

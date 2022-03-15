@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import MenuNav from "@/components/common/menuNav/MenuNav.vue";
+import MenuNav from "@/components/context/menuNav/MenuNav.vue";
 import SheetItem from "components/context/sheetItem/SheetItem";
 import scroll from "components/common/scroll/scroll.vue";
 

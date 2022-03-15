@@ -1,8 +1,6 @@
 <template>
   <div class="play-song" v-show="playlist.length">
-    <transition
-      name="normal"
-    >
+    <transition name="normal">
       <div class="normal-player" v-show="fullScreen">
         <!-- 背景图片 -->
         <div class="background">
@@ -119,7 +117,7 @@
             <div class="item img1" :class="disableCls">
               <i @click="next" class="iconfont icon-next"></i>
             </div>
-            <div class="item img1">
+            <div class="item img1" @click="showPlaylist">
               <i class="iconfont icon-liebiao"></i>
             </div>
           </div>
@@ -127,6 +125,7 @@
       </div>
     </transition>
     <mine-player :progress="progress" :toggle-play="togglePlay"></mine-player>
+    <playlist ref="playlistRef"></playlist>
     <audio
       :src="currentSong.url"
       ref="audioRef"
@@ -143,11 +142,12 @@
 <script>
 import ProgressBar from "./ProgressBar.vue"; //进度条
 import MinePlayer from "./mini-player.vue"; //迷你播放器
+import Playlist from "./playlist.vue"; //播放列表
 import scroll from "components/common/scroll/scroll";
 
 import { formatTime } from "@/assets/js/util.js";
 import { PLAY_MODE } from "@/assets/js/constant";
-import { useStore} from "vuex";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { computed, watch, ref, nextTick } from "vue";
 import useMode from "./use-mode"; //播放模式
@@ -156,13 +156,14 @@ import useCd from "./use-cd"; //唱片转盘
 import useLyric from "./use-lyric"; //歌词
 import useMiddleInteractive from "./use-middle-interactive"; //cd与歌词交互
 import useAnimation from "./use-animation"; //切换cd动画
-import usePlayHistory from "./use-play-history" //播放历史
+import usePlayHistory from "./use-play-history"; //播放历史
 
 export default {
   name: "PlaySong",
   components: {
     ProgressBar,
     MinePlayer,
+    Playlist,
     scroll,
   },
   setup() {
@@ -172,6 +173,7 @@ export default {
     const songReady = ref(false); //歌曲缓冲
     const duration = ref(0); //歌曲时长
     const currentTime = ref(0); //当前播放时间
+    const playlistRef = ref(null);
     let progressChanging = false;
 
     const router = useRouter();
@@ -209,7 +211,7 @@ export default {
       onMiddleTouchEnd,
     } = useMiddleInteractive();
     const { enter, afterEnter, leave, afterLeave } = useAnimation();
-    const { savePlay } = usePlayHistory()
+    const { savePlay } = usePlayHistory();
 
     // computed
     const playIcon = computed(() => {
@@ -327,7 +329,7 @@ export default {
       store.commit("setPlayDuration", duration.value);
       // 确保歌词一定执行
       playLyric();
-      savePlay(currentSong.value) 
+      savePlay(currentSong.value);
     }
 
     // 歌曲出错时，允许前进和后退
@@ -369,11 +371,14 @@ export default {
         next();
       }
     }
+    // 展开播放列表
+    function showPlaylist() {
+      playlistRef.value.show();
+    }
 
     // 评论
     function toComment() {
-      router.push('/Comment/' + currentSong.value.id  + "&" + "0")
-      
+      router.push("/Comment/" + currentSong.value.id + "&" + "0");
     }
 
     return {
@@ -383,6 +388,7 @@ export default {
       songReady,
       currentTime,
       duration,
+      playlistRef,
       progressChanging,
 
       // vuex
@@ -412,6 +418,7 @@ export default {
       onProgressChanging,
       onProgressChanged,
       end,
+      showPlaylist,
       toComment,
       // mode
       modeIcon,
@@ -442,7 +449,6 @@ export default {
       afterEnter,
       leave,
       afterLeave,
-
 
       // play,
     };

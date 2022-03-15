@@ -30,14 +30,18 @@
               class="list-scroll"
               v-if="currentIndex === 0"
             >
-              <song-item
-                :songList="playHistory"
-                @select="sheetSongBySongList"
-              ></song-item>
-              <!-- <song-item
-                :songList="playHistory"
-                @select="selectSongBySongList"
-              ></song-item> -->
+              <div v-if="AddSheet">
+                <song-item
+                  :songList="playHistory"
+                  @select="sheetSongBySongList"
+                ></song-item>
+              </div>
+              <div v-else>
+                <song-item
+                  :songList="playHistory"
+                  @select="selectSongBySongList"
+                ></song-item>
+              </div>
             </scroll>
           </div>
         </div>
@@ -61,9 +65,13 @@ import Switches from "@/components/common/switches/switches.vue";
 import SongItem from "@/components/context/songItem/SongItem";
 import Message from "@/components/common/message/message.vue";
 import scroll from "components/common/scroll/scroll.vue";
-import useSearchHistory from "@/views/search/childrenComps/use-search-history";
-import useSheetSong from "./use-sheet-song"
 
+import useSearchHistory from "@/views/search/childrenComps/use-search-history";
+import useSheetSong from "./use-sheet-song";
+
+import { getTracksSheet } from "@/network/sheet";
+
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { computed, ref, nextTick, watch } from "vue";
 
@@ -77,16 +85,27 @@ export default {
     Message,
     scroll,
   },
+  props: {
+    AddSheet: {
+      type: Boolean,
+      default: true,
+    },
+  },
   setup() {
     const visible = ref(false); //页面展示
     const query = ref(""); //搜索词
     const currentIndex = ref(0); //切换导航
-    const scrollRef = ref(null);
+    const scrollRef = ref(null); // scroll实例
     const messageRef = ref(null); //消息弹窗
+    const op = ref(null); //增加 add, 删除为 del
+    const sheetId = ref(null); // 路由传过来的歌单id
+
+    const router = useRouter();
 
     const store = useStore();
     const searchHistory = computed(() => store.state.searchHistory);
     const playHistory = computed(() => store.state.playHistory);
+    const cookie = computed(() => store.state.cookie);
 
     // const { saveSheet } = useSearchHistory();
     const { saveSheet } = useSheetSong();
@@ -118,9 +137,16 @@ export default {
       store.dispatch("addSong", song);
       showMessage();
     }
-
-    function sheetSongBySongList({song}) {
-      saveSheet(song)
+    // 添加歌曲到歌单
+    function sheetSongBySongList({ song }) {      
+      op.value = "add";
+      sheetId.value = router.currentRoute.value.params.id
+      getTracksSheet(op.value, sheetId.value, song.id, cookie.value).then(
+        (res) => {
+          // saveSheet(song); // 存储到本地中
+          console.log(res);
+        }
+      );
       showMessage();
     }
 
@@ -146,7 +172,7 @@ export default {
       selectSongBySongList,
       sheetSongBySongList,
 
-      saveSheet
+      saveSheet,
     };
   },
 };
@@ -158,7 +184,7 @@ export default {
   top: 0;
   bottom: 0;
   width: 100%;
-  z-index: 300;
+  z-index: 3000;
   height: 100vh;
   background-color: $color-bgc1;
   .header {

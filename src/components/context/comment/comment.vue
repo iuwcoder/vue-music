@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import MenuNav from "@/components/common/menuNav/MenuNav.vue";
+import MenuNav from "@/components/context/menuNav/MenuNav.vue";
 import Switches from "@/components/common/switches/switches.vue";
 import SendComment from "./CommentInput.vue";
 import Scroll from "components/common/scroll/scroll.vue";
@@ -262,9 +262,7 @@ export default {
             font-size: 15px;
             color: $color-text2;
             width: 90%;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
+            @include no-wrap();
             .add-time {
               margin-top: 5px;
               font-size: 12px;

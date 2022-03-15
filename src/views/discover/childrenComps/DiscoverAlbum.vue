@@ -139,9 +139,7 @@ export default {
           width: 85%;
           // border-bottom: $border-line;
           .text-name {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            @include no-wrap();
             margin-right: 5px;
             font-size: 14px;
           }
