@@ -1,5 +1,11 @@
 <template>
   <div class="suggest" ref="rootRef" v-loading="loading">
+    <!-- <div class="singer" @click="toSinger">
+      <div class="pic">
+        <img :src="singer.picUrl" alt="" />
+      </div>
+      <div class="name">歌手： {{ singer.name }}</div>
+    </div> -->
     <div class="song">
       <song-item :songList="songs" @select="selectSong"></song-item>
       <div v-loading="pullUpLoading"></div>
@@ -15,6 +21,7 @@ import { playSong } from "network/songs"; // 获取音乐url
 
 import { computed, nextTick, ref, watch } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from 'vue-router'
 
 import usePullUpLoad from "./use-pull-up-load";
 
@@ -33,12 +40,12 @@ export default {
   emits: ["select-song", "select-singer"],
   setup(props, { emit }) {
     const songs = ref([]); //歌曲
-    const songId = ref([]); //歌曲ID
     const singer = ref([]); //歌手
     const hasMore = ref(true); //是否有分页
     const offset = ref(0); //当前分页页数
-    const manualLoading = ref(false); 
-    
+    const manualLoading = ref(false);
+
+    const router = useRouter()
 
     const store = useStore();
 
@@ -70,6 +77,30 @@ export default {
       }
     );
 
+    async function songDetail(id) {
+      await getSongDetial(id.toString()).then((res) => {
+        let result = res.data.songs[0];
+        // console.log(res);
+        playSong(id).then((res) => {
+          let music = res.data.data[0];
+          // console.log(music);
+          getlyric(id).then((res) => {
+            songs.value.push({
+              singers: result.ar[0].name, // 歌手
+              navTitle: result.name, // 歌曲名称
+              yuanc: result.alia, //歌曲别名
+              zhuanji: result.al.name, //专辑名称
+              mv: result.mv,
+              id: result.id, // 歌曲id
+              bgimg: result.al.picUrl, // 歌曲封面
+              url: music.url, // 歌曲url
+              lrc: res.data.lrc.lyric, //歌词
+            });
+          });
+        });
+      });
+    }
+
     async function searchFirst() {
       if (!props.query) {
         return;
@@ -77,38 +108,24 @@ export default {
       offset.value = 0;
       hasMore.value = true;
       songs.value = [];
-      songId.value = [];
+      singer.value = [];
 
       await searchResult(props.query, 30, offset.value * 30, 1).then((res) => {
         hasMore.value = res.data.result.hasMore;
         for (const item of res.data.result.songs) {
-          getSongDetial(item.id.toString()).then((res) => {
-            let result = res.data.songs[0];
-            // console.log(res);
-            playSong(item.id).then((res) => {
-              let music = res.data.data[0];
-              // console.log(music);
-              getlyric(item.id).then((res) => {
-                songs.value.push({
-                  singers: result.ar[0].name, // 歌手
-                  navTitle: result.name, // 歌曲名称
-                  yuanc: result.alia, //歌曲别名
-                  zhuanji: result.al.name, //专辑名称
-                  mv: result.mv,
-                  id: result.id, // 歌曲id
-                  bgimg: result.al.picUrl, // 歌曲封面
-                  url: music.url, // 歌曲url
-                  lrc: res.data.lrc.lyric, //歌词
-                });
-              });
-            });
-          });
+          songDetail(item.id);
         }
       });
+      await searchResult(props.query, 30, offset.value * 30, 1018).then(
+        (res) => {
+          singer.value = res.data.result;
+          console.log(singer.value);
+        }
+      );
+
       // const result = await searchResult(props.query, 30, offset.value * 30, 1)
       // songs.value = await playSong(result.data.result.songs.id)
       // songId.value = result.data.result.songs.id
-      // hasMore.value = result.data.result.hasMore
       console.log(songs.value);
       console.log(hasMore.value);
       await nextTick();
@@ -122,14 +139,7 @@ export default {
       offset.value++;
       await searchResult(props.query, 30, offset.value * 30, 1).then((res) => {
         for (const item of res.data.result.songs) {
-          songs.value.push({
-            id: item.id,
-            navTitle: item.name,
-            yuanc: item.alias,
-            singers: item.artists[0].name,
-            zhuanji: item.album.name,
-            mv: item.mvid,
-          });
+          songDetail(item.id);
         }
       });
       // const result = await searchResult(props.query, 30, offset.value * 30, 1)
@@ -151,16 +161,20 @@ export default {
 
     // 添加歌曲
     function selectSong({ song }) {
-      addSong(song)
+      addSong(song);
     }
     function addSong(song) {
       store.dispatch("addSong", song);
     }
 
+      // 歌手详情
+    function toSinger() {
+      router.push("/Detail/" + singer.value.id);
+    }
+
     return {
       // data
       songs,
-      songId,
       singer,
 
       // computed
@@ -171,6 +185,7 @@ export default {
       // selectItem,
       // usePullUpLoad
       rootRef,
+      toSinger
     };
   },
   methods: {},
@@ -183,5 +198,25 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.singer {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  .pic {
+    height: 35px;
+    width: 35px;   
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+  .name {
+    margin-left: 10px;
+    font-size: 16px;
+  }
+}
 </style>

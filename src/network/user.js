@@ -28,16 +28,16 @@ export function getUserPlayList(uid) {
         }
     })
 }
-// export class PlayList {
-//     constructor(playlist) {
-//         this.id = playlist.id 
-//         this.name = playlist.name //歌单名称
-//         this.img = playlist.coverImgUrl //歌单图片
-//         this.playCount = playlist.playCount //创建歌单数量
-//         this.trackCount = playlist.trackCount //收藏歌单数量
-//         // this.nickname = playlist.creator.nickname
-//     }
-// }
+
+// 获取用户关注
+export function getUserFollows(uid) {
+    return request({
+        url: '/user/follows',
+        params: {
+            uid
+        }
+    })
+}
 
 export function getSongs() {
     return request({

@@ -67,12 +67,14 @@ export default {
     },
     myRadioStation() {},
 
-    myFollow() {},
+    myFollow() {
+      this.$router.push("/userCenter/myFollow/");
+    },
 
     myDisk() {},
 
     myCollection() {
-      this.$router.push("/userCenter/myCollection/");
+      this.$router.push("/userCenter/myCollection/")
 
       // if (!this.$store.state.cookie) {
       //   this.$toast.show("您需要先登录哦", 1900);

@@ -44,7 +44,6 @@ export default {
     getUserPlayList(this.$store.state.userId).then((res) => {
       this.likeId = res.data.playlist[0].id;
       this.trackCount = res.data.playlist[0].trackCount;
-      console.log(this.likeId );
     });
   },
 };

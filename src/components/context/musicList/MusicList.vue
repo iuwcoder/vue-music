@@ -6,7 +6,7 @@
         播放全部<span> ({{ trackCount }})</span>
       </div>
     </div>
-    <scroll class="scroll-content" v-if="songList.length">
+    <scroll class="scroll-content" v-if="songList.length"  v-loading="!songList.length">
       <div>
         <song-item :songList="songList" @select="selectItem"></song-item>
       </div>

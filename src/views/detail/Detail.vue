@@ -39,7 +39,7 @@
               </div>
             </div>
             <div class="user-name">
-              {{ profile.artistName }}
+              {{ profile.artistName || profile.nickname }}
               <img
                 v-if="profile.vipType !== 0"
                 src="~assets/img/common/vip1.svg"
@@ -57,30 +57,14 @@
           <div v-else class="singerDetail">{{ profile.artistName }}</div>
         </div>
         <div class="nav-box" ref="tab">
-          <van-tabs
-            class="tab"
-            background="#fff"
-            title-active-color="#e93d34"
-            animated
-            swipeable
-            @click-tab="tabToggle"
-          >
-            <van-tab
-              v-for="(item, index) in itemList"
-              :title="item"
-              :key="index"
-            >
-            </van-tab>
-          </van-tabs>
-          <!-- <tab-nav
+          <tab-nav
             @tabToggle="tabToggle"
             :firstIndex="firstIndex"
             class="tabnav"
             :itemList="itemList"
             ref="inforTabnav"
-          ></tab-nav> -->
+          ></tab-nav>
         </div>
-
         <!-- 主页 -->
         <home-page
           :artistId="profile.artistId"
@@ -140,27 +124,29 @@ export default {
       profile: {}, // 用户信息
       itemList: ["主页"],
       pageY: 0,
-      showHome: false, // 显示/隐藏主页
-      showSongs: true, // 显示/隐藏歌曲
+      showHome: true, // 显示/隐藏主页
+      showDynamic: false, // 显示/隐藏动态
+      showSongs: false, // 显示/隐藏歌曲
       showAlbum: false, // 显示/隐藏专辑
       showMv: false, // 显示/隐藏mv
       navToTop: 0, // 导航栏距离顶部的距离
+      firstIndex: 0, // 导航栏索引
       showShare: false, // 分享面板
       special: true,
       scrollY: 0, //滚动位置
       tabOffsetTop: 0, //最大滚动位置
       isTabFixed: false,
-      active: 0
     };
   },
   // 监听路由变化
   beforeRouteUpdate(to, from, next) {
     if (to.fullPath != from.fullPath) {
       this.profile = {}; // 清空mv数据
-      this.index = 0; // 重置导航栏索引
-      // this.$refs.inforTabnav.tabItem(this.firstIndex);
-      this.tabToggle(this.index); // 切换导航栏界面
+      this.firstIndex = 0; // 重置导航栏索引
+      this.$refs.inforTabnav.tabItem(this.firstIndex);
+      this.tabToggle(this.firstIndex); // 切换导航栏界面
       this.showHome = false; // 显示首页
+      // this.$store.state.isShowNav = true;
       next();
       this.userDetail();
     }
@@ -192,7 +178,7 @@ export default {
         backgroundColor = "#fff";
         color = "#333";
         zIndex = 21;
-        this.navTitle = this.profile.artistName;
+        this.navTitle = this.profile.artistName || this.profile.nickname;
       } else {
         this.navTitle = "";
       }
@@ -241,44 +227,49 @@ export default {
 
     // 导航栏切换
     tabToggle(index) {
-      switch (index) {
-        case 0:
-          this.showHome = true;
-          this.showSongs = false;
-          this.showAlbum = false;
-          this.showMv = false;
-          break;
-        case 1:
-          this.showSongs = true;
-          this.showHome = false;
-          this.showAlbum = false;
-          this.showMv = false;
-          break;
-        case 2:
-          this.showAlbum = true;
-          this.showSongs = false;
-          this.showHome = false;
-          this.showMv = false;
-          break;
-        case 3:
-          this.showMv = true;
-          this.showAlbum = false;
-          this.showSongs = false;
-          this.showHome = false;
-          break;
-        default:
-          break;
+      if (this.itemList.length == 4) {
+        switch (index) {
+          case 0:
+            this.showHome = true;
+            this.showSongs = false;
+            this.showAlbum = false;
+            this.showMv = false;
+            break;
+          case 1:
+            this.showSongs = true;
+            this.showHome = false;
+            this.showAlbum = false;
+            this.showMv = false;
+            break;
+          case 2:
+            this.showAlbum = true;
+            this.showSongs = false;
+            this.showHome = false;
+            this.showMv = false;
+            break;
+          case 3:
+            this.showMv = true;
+            this.showAlbum = false;
+            this.showSongs = false;
+            this.showHome = false;
+            break;
+          default:
+            break;
+        }
       }
     },
 
     userDetail() {
       getUserDetail(this.$route.params.uid).then(
         (res) => {
+          console.log(res);
+          
           this.profile.userId = res.data.profile.userId;
           this.profile.level = res.data.level; // 用户等级
           this.profile.listenSongs = res.data.listenSongs; // 用户累计播放歌曲
           this.profile.avatarUrl = res.data.profile.avatarUrl; // 用户头像
-          this.profile.artistName = res.data.profile.artistName; // 用户昵称
+          this.profile.artistName = res.data.profile.artistName; // 歌手名称
+          this.profile.nickname = res.data.profile.nickname; // 用户昵称
           this.profile.follows = res.data.profile.follows; // 用户关注
           this.profile.followeds = toStringNum(res.data.profile.followeds); // 用户粉丝
           this.profile.gender = res.data.profile.gender; // 性别
@@ -294,15 +285,20 @@ export default {
           //   this.profile.backgroundUrl,
           //   res.data.profile.backgroundUrl
           // );
-
           // 判断用户是不是歌手
           if (this.profile.artistId !== null) {
-            this.itemList.splice(1, 0, "歌曲", "专辑", "视频");
+            this.itemList.splice(1, 0, "歌曲", "专辑", "MV");
+            this.$nextTick(() => {
+              this.$refs.inforTabnav.tabItem(0);
+            });
           }
         },
         (err) => {
           this.profile.artistId = this.$route.params.uid;
-          this.itemList.splice(1, 0, "歌曲", "专辑", "视频");
+          this.itemList.splice(1, 0, "歌曲", "专辑", "MV");
+          this.$nextTick(() => {
+            this.$refs.inforTabnav.tabItem(0);
+          });
 
           getSingerAlbum(this.$route.params.uid).then((res) => {
             this.profile.backgroundUrl = res.data.artist.picUrl;
@@ -463,7 +459,6 @@ export default {
     // z-index: 50;
     .songs {
       background-color: $color-bgc1;
-      padding-top: 10px;
     }
   }
 }

@@ -16,7 +16,7 @@
       :style="menuStyle"
       :sheetId="sheetId"
     ></menu-nav>
-    <scroll class="detail-content" :probe-type="3" @scroll="onScroll">
+    <scroll class="detail-content" :probe-type="3" @scroll="onScroll"  v-loading="!songs.length">
       <div>
         <div class="box">
           <div ref="sheetDetailBox" class="zhez"></div>
@@ -29,7 +29,7 @@
           <div class="zbox">
             <div class="top">
               <div class="top-img">
-                <img class="pic" v-lazy="sheetInfo.coverImgUrl" alt="" />
+                <img class="pic" :src="sheetInfo.coverImgUrl" alt="" />
                 <div class="count" v-if="this.$route.params.isType == 'true'">
                   ▷ {{ sheetInfo.playCount }}
                 </div>
@@ -37,9 +37,13 @@
               <div class="right">
                 <div class="title">{{ sheetInfo.name }}</div>
                 <div class="user">
-                  <img class="pho" v-lazy="sheetInfo.avatarUrl" alt="" />
-                  <div class="name">{{ sheetInfo.nickname }}</div>
+                  <img class="pho" v-if="this.$route.params.isType == 'true'" v-lazy="sheetInfo.avatarUrl" alt="" />
+                  <div class="name">
+                    <span v-if="this.$route.params.isType == 'false'">歌手：</span>                   
+                    {{ sheetInfo.nickname }}
+                    </div>
                 </div>
+                <div class="desc" v-if="this.$route.params.isType == 'false'">发行时间：{{ $filters.getTime(sheetInfo.time) }}</div>
                 <div class="desc">{{ sheetInfo.desc }}</div>
               </div>
             </div>
@@ -54,7 +58,7 @@
         </div>
         <div v-else>
           <div v-if="this.$route.params.isType == 'user'">
-            <div class="add-song" v-if="songs == ''">
+            <div class="add-song" v-if="!sheetSong.length">
               <van-button
                 class="btn"
                 plain
@@ -68,10 +72,10 @@
               >
             </div>
             <song-nav
-              v-if="songs.length"
-              :trackCount="sheetInfo.trackCount"
+              v-if="sheetSong.length"
+              :trackCount="sheetSong.length"
             ></song-nav>
-            <song-item :songList="songs" @select="selectItem"></song-item>
+            <song-item :songList="sheetSong" @select="selectItem"></song-item>
           </div>
         </div>
         <add-song ref="addSongRef"></add-song>
@@ -200,6 +204,28 @@ export default {
       });
     },
 
+    // 获取专辑详情
+    getAblums(id) {
+      getAblum(id).then((res) => {
+        console.log(res);
+        let paths = res.data.album;
+        this.sheetInfo.coverImgUrl = paths.picUrl; // 歌单封面
+        this.sheetInfo.name = paths.name; // 歌单名称
+        this.sheetInfo.desc = paths.description; // 歌单描述
+        this.sheetInfo.trackCount = paths.size; // 歌单歌曲数量
+        this.sheetInfo.commentCount = paths.info.commentCount; // 歌单评论数
+        this.sheetInfo.subCount = toStringNum(paths.info.commentCount); // 歌单收藏数
+        this.sheetInfo.shareCount = paths.info.shareCount; // 歌单分享数
+
+        this.sheetInfo.time = paths.publishTime; // 用户名
+        this.sheetInfo.nickname = paths.artist.name; // 用户名
+        this.sheetInfo.userId = paths.id; // 用户id
+        for (const item of res.data.songs) {
+          this.getSong(item.id);
+        }
+      });
+    },
+
     //获取歌曲详情
     getSong(id) {
       getSongDetial(id.toString()).then((res) => {
@@ -233,16 +259,10 @@ export default {
     if (this.$route.params.isType == "true") {
       this.getSheet(this.sheetId);
     } else if (this.$route.params.isType == "user") {
-      console.log(this.songs);
       this.getSheet(this.sheetId);
-      // window.location.reload()
-
-      storage.set(SHEETSONG_KEY, this.songs);
-      // this.setSheetSong(this.SHEET_KEY)
     } else if (this.$route.params.isType == "false") {
-      getAblum(this.$route.params.id).then((res) => {
-        console.log(res);
-      });
+      this.navTitle = "专辑";
+      this.getAblums(this.sheetId);
     }
   },
   // },

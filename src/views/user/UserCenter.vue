@@ -2,8 +2,15 @@
   <div class="user-center">
     <scroll class="scroll-content">
       <div>
-        <user-login class="login" v-if="this.$store.state.userId !== ''"></user-login>
-        <user-not-login class="not-login" v-else></user-not-login>
+        <user-login
+          class="login"
+          v-if="this.$store.state.userId !== ''"
+        ></user-login>
+        <user-not-login
+          v-else
+          class="not-login"
+          @click="clear"
+        ></user-not-login>
         <user-menu></user-menu>
         <user-like></user-like>
         <tab-control id="tabCon" ref="tab" :title="title"></tab-control>
@@ -21,6 +28,8 @@ import UserLike from "./childrenComps/UserLike.vue";
 import TabControl from "@/components/common/tabControl/TabControl";
 import UserSheet from "./childrenComps/UserSheet.vue";
 import scroll from "components/common/scroll/scroll.vue";
+
+import { mapActions } from "vuex";
 
 import "assets/icon/MyMessage.css"; // 我的页面字体图标
 
@@ -41,12 +50,19 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["clearSongList"]),
+
     tabToggle(index) {
       if (this.index !== index) {
         this.sheetDetail = []; // 清空数据
         this.getSheet(index);
       }
       this.index = index;
+    },
+
+    // 清空播放状态
+    clear() {
+      this.clearSongList();
     },
   },
 };
@@ -60,12 +76,12 @@ export default {
   .scroll-content {
     height: 100%;
     overflow: hidden;
-      .login,
-      .not-login {
-        #tabCon {
-          margin-top: 15px;
-        }
+    .login,
+    .not-login {
+      #tabCon {
+        margin-top: 15px;
       }
+    }
   }
 }
 </style>

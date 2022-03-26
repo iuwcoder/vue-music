@@ -124,7 +124,19 @@
         </div>
       </div>
     </transition>
-    <mine-player :progress="progress" :toggle-play="togglePlay"></mine-player>
+    <mine-player
+      v-if="isShowPlayer1"
+      ref="player1Ref"
+      :progress="progress"
+      :toggle-play="togglePlay"
+    ></mine-player>
+    <!-- <mine-player
+      v-if="isShowPlayer2"
+      ref="player2Ref"
+      class="mini"
+      :progress="progress"
+      :toggle-play="togglePlay"
+    ></mine-player> -->
     <playlist ref="playlistRef"></playlist>
     <audio
       :src="currentSong.url"
@@ -166,6 +178,39 @@ export default {
     Playlist,
     scroll,
   },
+  data() {
+    return {
+      isShowPlayer1: {
+        type: Boolean,
+        default: true,
+      },
+      isShowPlayer2: {
+        type: Boolean,
+        default: false,
+      },
+    };
+  },
+  // watch: {
+  //   // 监听路由变换到主页 播放器显示
+  //   $route(to, from, next) {
+  //     let ThisPage = to.name;
+  //     if (
+  //       ThisPage === "userCenter" ||
+  //       ThisPage === "discover" ||
+  //       ThisPage === "search"
+  //     ) {
+  //       next(() => {
+  //         this.isShowPlayer1 = false;
+  //         this.isShowPlayer2 = true;
+  //       });
+  //     } else {
+  //       next(() => {
+  //         this.isShowPlayer1 = true;
+  //         this.isShowPlayer2 = false;
+  //       });
+  //     }
+  //   },
+  // },
   setup() {
     //data
     const audioRef = ref(null);
@@ -174,6 +219,7 @@ export default {
     const duration = ref(0); //歌曲时长
     const currentTime = ref(0); //当前播放时间
     const playlistRef = ref(null);
+
     let progressChanging = false;
 
     const router = useRouter();
@@ -458,6 +504,10 @@ export default {
 
 <style lang="scss" scoped>
 .play-song {
+  .mini {
+    position: absolute;
+    bottom: 50px;
+  }
   .normal-player {
     position: fixed;
     left: 0;
@@ -467,7 +517,7 @@ export default {
     height: 100%;
     background-color: #222;
     // height: 100vh;
-    z-index: 150;
+    z-index: 250;
     // 背景
     .background {
       position: absolute;
@@ -515,7 +565,7 @@ export default {
         margin: 0 auto;
         line-height: 40px;
         text-align: center;
-        // @include no-wrap();
+        @include no-wrap();
         font-size: 20px;
         color: $color-bgc;
       }
@@ -524,6 +574,7 @@ export default {
         text-align: center;
         font-size: 16px;
         color: $color-song;
+        @include no-wrap();
       }
     }
     // 中间部分

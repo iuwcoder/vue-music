@@ -17,7 +17,7 @@
         >
           <div class="pic">
             <img :src="item.picUrl" alt="" />
-            <i class="iconfont icon-bofang"></i>
+            <!-- <i class="iconfont icon-bofang"></i> -->
           </div>
           <div class="text">
             <div class="text-name">{{ item.name }}</div>
@@ -47,7 +47,7 @@ export default {
     },
         // 路由跳转
     albumShow(id) {
-      this.$router.push("/SheetInfo/" + id + '&' + false);
+      this.$router.push("/SheetInfo/" + id + '&' + 'false');
     },
   },
   created() {
@@ -113,7 +113,7 @@ export default {
       height: 175px;
       margin: 4px 10px;
       .ablum-list {
-        width: 340px;
+        width: 350px;
         height: 45px;
         display: flex;
         padding-top: 10px;

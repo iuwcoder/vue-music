@@ -1,6 +1,5 @@
 <template>
-  <router-link to="/login" tag="div">
-    <div class="box">
+    <div class="box" @click="detail">
       <div class="user-login">
         <div class="user-img">
           <img :src="avatarUrl" alt="" />
@@ -12,7 +11,6 @@
         <i class="iconfont icon-gengduo"></i>
       </div>
     </div>
-  </router-link>
 </template>
 
 <script>
@@ -26,6 +24,11 @@ export default {
       avatarUrl: "",
       nickName: "",
     };
+  },
+  methods: {
+    detail() {
+      this.$router.push("/Detail/" + this.$store.state.userId);
+    }
   },
   created() {
     // 441939758

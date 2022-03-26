@@ -203,6 +203,7 @@ export default {
   color: $color-red;
 }
 .comment {
+  z-index: 5000;
   position: fixed;
   top: 0;
   right: 0;

@@ -1,5 +1,5 @@
 <template>
-  <div class="more-songs">
+  <div class="more-songs"  v-loading="!songs.length">
     <menu-nav :navTitle="'最新音乐'"></menu-nav>
     <van-tabs
       class="tab"
@@ -7,7 +7,7 @@
       title-active-color="#e93d34"
       animated
       swipeable
-      @click-tab="tabToggle"
+      @click="tabToggle"
     >
       <van-tab
         v-for="(item, index) in itemList"
@@ -17,7 +17,7 @@
       >
       </van-tab>
     </van-tabs>
-    <scroll class="scroll-content">
+    <scroll class="detail-content">
       <div>
         <!-- <div class="title">
           <div class="name">{{ name }}</div>
@@ -41,7 +41,7 @@
 import MenuNav from "components/context/menuNav/MenuNav";
 import SongNav from "@/components/context/songItem/SongNav";
 import SongItem from "@/components/context/songItem/SongItem";
-import Scroll from "components/common/scroll/scroll.vue";
+import scroll from "components/common/scroll/scroll.vue";
 
 import { getSongsTop } from "network/discover";
 import { getSongDetial, getlyric } from "network/played"; // 获取歌曲基本信息 歌词 评论
@@ -54,7 +54,7 @@ export default {
     MenuNav,
     SongNav,
     SongItem,
-    Scroll,
+    scroll,
   },
   data() {
     return {
@@ -114,6 +114,7 @@ export default {
     },
     // 封装方法
     toggleSongs(index) {
+      // this.$loading.loadingShow();
       if (this.index !== index) {
         this.songs = []
         getSongsTop(index).then((res) => {
@@ -163,7 +164,7 @@ export default {
   background-color: #fff;
   height: 100vh;
 }
-.scroll-content {
+.detail-content {
   height: 100%;
   overflow: hidden;
 }

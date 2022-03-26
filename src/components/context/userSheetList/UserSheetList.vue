@@ -26,7 +26,7 @@
             </div>
           </div>
         </div>
-        <div class="right" @click="delet(index)">
+        <div class="right" @click="delet()">
           <i class="iconfont icon-sandian"></i>
         </div>
       </div>
@@ -41,7 +41,6 @@
 
 <script>
 import SongPop from "@/components/context/sheet/SongPop";
-import { mapMutations } from 'vuex'
 
 export default {
   name: "UserSheetList",
@@ -51,7 +50,7 @@ export default {
   },
   methods: {
     sheetInfo(id) {
-      this.$router.push("/SheetInfo/" + id + "&" + 'user'); // 跳转到歌单页面
+      this.$router.push("/SheetInfo/" + id + "&" + 'true'); // 跳转到歌单页面
     },
 
     selectItem({ sheet, index }) {
@@ -59,7 +58,7 @@ export default {
     },
 
     // 展示删除歌单
-    delet(index) {
+    delet() {
       console.log(this.sheetList.id);
       this.$refs.deleteSheetRef.showPopup();
     },
@@ -72,9 +71,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left {
-  flex: 1.5;
   border-radius: 8px;
   overflow: hidden;
+  height: 50px;
+  width: 52px;
 }
 .left img {
   width: 100%;
@@ -98,7 +98,7 @@ export default {
   color: #aaaaaa;
 }
 .center {
-  flex: 7.5;
+  flex: 1;
   display: flex;
   align-items: center;
 }
@@ -116,7 +116,7 @@ export default {
 }
 .songSheet {
   width: 100%;
-  height: 45px;
+  height: 55px;
   display: flex;
   /* position: relative;
   top: 5px; */

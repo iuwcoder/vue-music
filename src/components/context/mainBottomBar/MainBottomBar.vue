@@ -6,7 +6,7 @@
       inactive-color="#808080"
       @change="onChange"
     >
-      <van-tabbar-item>
+      <van-tabbar-item replace to="/discover">
         <span>发现</span>
         <template #icon>
           <i class="iconfont icon-faxian1"></i>
@@ -18,7 +18,7 @@
           <i class="iconfont icon-boke"></i>
         </template>
       </van-tabbar-item>
-      <van-tabbar-item>
+      <van-tabbar-item replace to="/userCenter">
         <span>我的</span>
         <template #icon>
           <i class="iconfont icon-yinle"></i>
@@ -51,7 +51,7 @@ export default {
 
   methods: {
     onChange(index) {
-      // this.active = index
+      this.active = index
       switch (index) {
         case 0:
           this.$router.push("/discover");
@@ -71,6 +71,7 @@ export default {
 
 <style lang='scss' scoped>
 .main-bottom-bar {
+  z-index: 500;
   .iconfont {
     font-size: 20px;
   }

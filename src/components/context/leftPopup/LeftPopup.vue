@@ -6,32 +6,24 @@
     :style="{ width: '80%', height: '100%', backgroundColor: '#f5f5f5' }"
     v-model:show="show"
   >
-    <router-link
-      to="/userCenter"
-      tag="div"
-      v-if="this.$store.state.userId !== ''"
-    >
-      <div class="user-content">
-        <div class="user-img">
-          <img :src="avatarUrl" alt="" />
-        </div>
-        <div class="user-detail">
-          <div class="text">{{ nickName }}</div>
-          <i class="iconfont icon-gengduo"></i>
-        </div>
+    <div class="user-content" v-if="this.$store.state.userId !== ''" @click="detail">
+      <div class="user-img">
+        <img :src="avatarUrl" alt="" />
       </div>
-    </router-link>
-    <router-link to="/login" tag="div" v-else>
-      <div class="user-content">
-        <div class="user-img">
-          <i class="iconfont icon-yonghu"></i>
-        </div>
-        <div class="user-detail">
-          <div class="text">未登录</div>
-          <i class="iconfont icon-gengduo"></i>
-        </div>
+      <div class="user-detail">
+        <div class="text">{{ nickName }}</div>
+        <i class="iconfont icon-gengduo"></i>
       </div>
-    </router-link>
+    </div>
+    <div v-else class="user-content" @click="login">
+      <div class="user-img">
+        <i class="iconfont icon-yonghu"></i>
+      </div>
+      <div class="user-detail">
+        <div class="text">未登录</div>
+        <i class="iconfont icon-gengduo"></i>
+      </div>
+    </div>
     <div class="close">
       <van-button
         class="btn"
@@ -49,7 +41,7 @@
 <script>
 import { getUserDetail } from "network/user"; // 用户信息
 import { refreshLogin } from "network/login";
-import { mapMutations } from "vuex";
+import { mapMutations, mapActions } from "vuex";
 
 export default {
   name: "LeftPopup",
@@ -62,15 +54,33 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["changeLogin", "setUserId"]),
+    ...mapMutations(["changeLogin", "setUserId", "setCookie"]),
+    ...mapActions(["clearSongList"]),
+
     showPopup() {
       this.show = true;
     },
-    exit() {
-      localStorage.removeItem('token')
-      localStorage.removeItem('userId')
+
+    // 个人详情
+    detail() {
+      this.$router.push("/Detail/" + this.$store.state.userId);
+    },
+
+    // 未登录
+    login() {
+      this.clearSongList();
       this.$router.push("/login");
-    }
+    },
+
+    // 退出
+    exit() {
+      localStorage.clear("token");
+      this.setUserId("");
+      this.changeLogin("");
+      this.setCookie("");
+      this.clearSongList();
+      this.$router.push("/login");
+    },
   },
   created() {
     getUserDetail(this.$store.state.userId).then((res) => {

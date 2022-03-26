@@ -32,7 +32,7 @@ const PhoneLogin = () => import('@/components/context/login/PhoneLogin' /* webpa
 const userCenter = () => import('@/views/user/UserCenter' /* webpackChunkName: "user-center" */)
 const played = () => import('@/views/user/childrenComps/moreComps/played' /* webpackChunkName: "user-center-played" */) //最近播放
 const myCollection = () => import('@/views/user/childrenComps/moreComps/myCollection' /* webpackChunkName: "user-center-collection" */) //收藏
-
+const myFollow = () => import('@/views/user/childrenComps/moreComps/myFollow' /* webpackChunkName: "user-center-myFollow" */) //我的关注
 
 // 视频页面
 const video = () => import('@/views/video/Video' /* webpackChunkName: "video" */)
@@ -77,10 +77,6 @@ const routes = [{
     path: '/Comment/:id&:isType', 
     component: Comment,
   },
-  // { // 播放界面
-  //   path: '/PlaySong/:sid',
-  //   component: PlaySong
-  // },
   { //更多歌手
     path: '/discover/moreSinger',
     component: moreSinger,
@@ -115,16 +111,21 @@ const routes = [{
     path: '/userCenter/myCollection',
     component: myCollection,
   },
-
-
-  {
-    path: '/video',
-    component: video,
+  { // 关注
+    path: '/userCenter/myFollow',
+    component: myFollow,
   },
-  {
+
+  { //搜索
     path: '/search',
     component: search
   },
+
+  { 
+    path: '/video',
+    component: video,
+  },
+
 
 
 ]
@@ -135,13 +136,13 @@ const router = createRouter({
 })
 
 // router.beforeEach((to, from, next) => {
-//   if (to.path === '/userCenter/login') {
+//   if (to.path === '/userCenter/played') {
 //     next();
 //   } else {
 //     let token = localStorage.getItem('token');
 
 //     if (token === null || token === '') {
-//       next('/userCenter/login');
+//       next('/login');
 //     } else {
 //       next();
 //     }

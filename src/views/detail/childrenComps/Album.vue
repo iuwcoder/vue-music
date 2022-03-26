@@ -2,7 +2,7 @@
   <div class="album" v-loading="!albumList.length">
     <div
       class="album-item"
-      @click="showAlbum"
+      @click="showAlbum(item.id)"
       v-for="(item, index) in albumList"
       :key="index"
     >
@@ -40,7 +40,7 @@ export default {
   methods: {
     // 专辑详情页
     showAlbum(id) {
-      this.$router.push("/SheetInfo/" + id + "&" + false);
+      this.$router.push("/SheetInfo/" + id + "&" + 'false');
     },
     singerAlbum() {
       if (this.more) {

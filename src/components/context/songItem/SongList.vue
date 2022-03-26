@@ -10,7 +10,7 @@
     </div>
     <!-- <song-nav :trackCount="50"></song-nav> -->
 
-    <div>
+    <div v-loading="!songs.length">
       <song-item :songList="songs" @select="selectItem"></song-item>
     </div>
   </div>

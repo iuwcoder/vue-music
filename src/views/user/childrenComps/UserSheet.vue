@@ -14,7 +14,7 @@
         </div>
       </div>
       <user-sheet-list
-        :sheetList="userSheet"
+        :sheetList="sheetList"
         :nickName="nickName"
         :sheet="sheet"
       ></user-sheet-list>
@@ -28,7 +28,7 @@
       </div>
       <user-sheet-list
         v-if="sheetCollectionLength !== 0"
-        :sheetList="userSheet"
+        :sheetList="sheetList"
         :nickName="nickName"
       ></user-sheet-list>
       <div class="nosheet" v-else>暂时还没有收藏歌单</div>
@@ -63,12 +63,12 @@ export default {
     // 计算歌单数量
     sheetLength() {
       return (
-        this.userSheet.filter((item) => item.creator === this.nickName).length -
+        this.sheetList.filter((item) => item.creator === this.nickName).length -
         1
       );
     },
     sheetCollectionLength() {
-      return this.userSheet.filter((item) => item.creator !== this.nickName)
+      return this.sheetList.filter((item) => item.creator !== this.nickName)
         .length;
     },
   },
@@ -102,7 +102,7 @@ export default {
           creator: item.creator.nickname, //用户名
         });
        storage.set(USERSHEET_KEY, this.sheetList)
-       this.setUserSheet(storage.get(USERSHEET_KEY))
+      //  this.setUserSheet(storage.get(USERSHEET_KEY))
       }
     });
   },
